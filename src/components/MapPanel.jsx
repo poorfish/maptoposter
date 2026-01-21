@@ -17,6 +17,7 @@ function MapPanel({ center, zoom, distance, onMapChange, onLocationSelect, onDis
     const mapInstanceRef = useRef(null)
     const circleRef = useRef(null)
     const markerRef = useRef(null)
+    const resizeObserverRef = useRef(null)
 
     // Store callbacks in ref to avoid re-initializing map listeners when handlers change
     const callbacksRef = useRef({ onMapChange, onLocationSelect })
@@ -70,9 +71,28 @@ function MapPanel({ center, zoom, distance, onMapChange, onLocationSelect, onDis
 
             map.on('moveend', handleMapUpdate)
             map.on('zoomend', handleMapUpdate)
+
+            // Monitor container size changes to refresh map
+            resizeObserverRef.current = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                    // Immediately invalidate size when container dimensions change
+                    if (map && entry.target === mapRef.current) {
+                        map.invalidateSize({ pan: false, animate: false })
+                    }
+                }
+            })
+
+            if (mapRef.current) {
+                resizeObserverRef.current.observe(mapRef.current)
+            }
         }
 
         return () => {
+            // Cleanup on unmount
+            if (resizeObserverRef.current) {
+                resizeObserverRef.current.disconnect()
+                resizeObserverRef.current = null
+            }
             if (mapInstanceRef.current) {
                 mapInstanceRef.current.remove()
                 mapInstanceRef.current = null
