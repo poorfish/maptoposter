@@ -498,12 +498,11 @@ export async function fetchOSMDataProgressive(lat, lon, distance, onProgress) {
 
             return completeData;
         } catch (stage2Error) {
-            // Graceful degradation: If Stage 2 fails, return Stage 1 data
-            console.warn('[MapDataFetcher] Stage 2 failed, continuing with major roads only:', stage2Error.message);
+            // Graceful degradation: If Stage 2 fails, return Stage 1 data but notify UI of error
+            console.warn('[MapDataFetcher] Stage 2 failed:', stage2Error.message);
 
-            // Still notify completion with major roads
             if (onProgress) {
-                onProgress('complete', majorData);
+                onProgress('error', majorData, stage2Error);
             }
 
             return majorData;

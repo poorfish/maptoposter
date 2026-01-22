@@ -46,18 +46,24 @@ function PosterRenderer({ mapCenter, distance, city, country, theme, fontFamily,
                 lat,
                 lon,
                 distance,
-                (stage, data) => {
+                (stage, data, err) => {
+                    if (data) setOsmData(data)
+
                     if (stage === 'major') {
                         // Stage 1: Display major roads quickly
                         console.log('[PosterRenderer] Stage 1 complete: Major features loaded')
-                        setOsmData(data)
                         setLoadingStage('minor')
                         setLoading(false) // Main loading overlay removed
                     } else if (stage === 'complete') {
                         // Stage 2: Update with complete (sampled) data
                         console.log('[PosterRenderer] Stage 2 complete: All roads loaded')
-                        setOsmData(data)
                         setLoadingStage(null)
+                        setError(null)
+                    } else if (stage === 'error') {
+                        // Stage 2 failed but Stage 1 is visible
+                        console.warn('[PosterRenderer] Stage 2 error:', err)
+                        setError(err.message || 'Failed to load details')
+                        setLoadingStage('minor_error')
                     }
                 }
             )
@@ -71,7 +77,7 @@ function PosterRenderer({ mapCenter, distance, city, country, theme, fontFamily,
             console.error('Failed to fetch OSM data:', err)
             setError(err.message)
             setLoading(false)
-            setLoadingStage(null)
+            setLoadingStage('major_error')
         }
     }
 
@@ -107,7 +113,7 @@ function PosterRenderer({ mapCenter, distance, city, country, theme, fontFamily,
                     <span>
                         {error ? (
                             <>
-                                Failed to load details.
+                                {loadingStage === 'major_error' ? 'Failed to load structure.' : 'Failed to load details.'}
                                 <span className="status-retry-link" onClick={() => fetchData()}>Retry</span>
                             </>
                         ) : (
