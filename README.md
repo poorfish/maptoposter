@@ -1,5 +1,7 @@
 # Mapster
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fpoorfish%2Fmaptoposter)
+
 A React web application for creating beautiful, minimalist map posters for any location in the world. Search for a city, customize the theme and layout, then download your poster as SVG or PNG.
 
 ## Features
@@ -70,6 +72,17 @@ npm run dev      # Start dev server
 npm run build    # Build for production
 npm run preview  # Preview production build
 ```
+
+## Acknowledgments
+
+This project is built upon the excellent work of [originalankur/maptoposter](https://github.com/originalankur/maptoposter). We've extended the original concept with:
+
+- **Rebranded UI** - Renamed to Mapster with custom branding and icon
+- **Enhanced UX** - Improved menu interactions and button states
+- **Dark Theme Integration** - Consistent dark color scheme across all UI elements
+- **Better Layout** - Optimized split-pane design for desktop use
+
+We're grateful to the original creators for open-sourcing this fantastic tool and making it possible for others to build upon their work.
 
 ## License
 

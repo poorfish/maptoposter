@@ -29,10 +29,12 @@ function App() {
     // Preview sync state
     const [isOutOfSync, setIsOutOfSync] = useState(false)
     const [updatePreviewHandler, setUpdatePreviewHandler] = useState(null)
+    const [hasGenerated, setHasGenerated] = useState(false)
 
-    const handleSyncStatusChange = useCallback((outOfSync, handler) => {
+    const handleSyncStatusChange = useCallback((outOfSync, handler, hasGenerated) => {
         setIsOutOfSync(outOfSync)
         setUpdatePreviewHandler(() => handler)
+        setHasGenerated(hasGenerated)
     }, [])
 
     // Memoize handlers
@@ -71,6 +73,7 @@ function App() {
                         zoom={mapZoom}
                         distance={distance}
                         isOutOfSync={isOutOfSync}
+                        hasGenerated={hasGenerated}
                         onMapChange={handleMapChange}
                         onLocationSelect={handleLocationSelect}
                         onDistanceChange={handleDistanceChange}

@@ -77,9 +77,10 @@ function PreviewPanel({
     // Notify parent about sync status changes
     useEffect(() => {
         if (onSyncStatusChange) {
-            onSyncStatusChange(isOutOfSync, handleUpdatePreview)
+            const hasGenerated = renderedParams.center !== null
+            onSyncStatusChange(isOutOfSync, handleUpdatePreview, hasGenerated)
         }
-    }, [isOutOfSync, onSyncStatusChange])
+    }, [isOutOfSync, onSyncStatusChange, renderedParams])
 
     // Close download menu when clicking outside
     useEffect(() => {

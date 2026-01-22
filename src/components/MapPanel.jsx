@@ -12,7 +12,7 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 })
 
-function MapPanel({ center, zoom, distance, isOutOfSync, onMapChange, onLocationSelect, onDistanceChange, onUpdatePreview }) {
+function MapPanel({ center, zoom, distance, isOutOfSync, hasGenerated, onMapChange, onLocationSelect, onDistanceChange, onUpdatePreview }) {
     const mapRef = useRef(null)
     const mapInstanceRef = useRef(null)
     const circleRef = useRef(null)
@@ -159,7 +159,7 @@ function MapPanel({ center, zoom, distance, isOutOfSync, onMapChange, onLocation
                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                             <circle cx="12" cy="12" r="3"></circle>
                         </svg>
-                        {isOutOfSync ? 'Re-generate' : 'Generate'}
+                        {hasGenerated ? 'Re-generate' : 'Generate'}
                     </button>
                 </div>
             )}
