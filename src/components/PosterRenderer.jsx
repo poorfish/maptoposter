@@ -96,45 +96,24 @@ function PosterRenderer({ mapCenter, distance, city, country, theme, fontFamily,
 
     return (
         <div className="poster-renderer">
-            {/* Main loading overlay - Stage 1 (major roads) */}
-            {(loading || isLoading) && (
-                <div className="loading-overlay">
-                    <div className="spinner"></div>
-                    <p>{error ? 'Retrying with different server...' : 'Loading map structure...'}</p>
-                </div>
-            )}
-
-            {/* Subtle loading indicator - Stage 2 (minor roads) */}
-            {!loading && loadingStage === 'minor' && (
-                <div style={{
-                    position: 'absolute',
-                    top: '10px',
-                    right: '10px',
-                    background: 'rgba(0, 0, 0, 0.7)',
-                    color: '#fff',
-                    padding: '8px 12px',
-                    borderRadius: '4px',
-                    fontSize: '12px',
-                    zIndex: 10,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                }}>
-                    <span style={{ animation: 'spin 1s linear infinite', display: 'inline-block' }}>🔄</span>
-                    Loading details...
-                </div>
-            )}
-
-            {error && (
-                <div className="error-overlay">
-                    <div className="error-message">
-                        <h3>Failed to load map data</h3>
-                        <p>{error}</p>
-                        <div className="error-actions">
-                            <button onClick={() => fetchData()}>Retry</button>
-                            <button className="secondary" onClick={() => window.location.reload()}>Reload Page</button>
-                        </div>
-                    </div>
+            {/* Unified Loading & Error Status Indicator */}
+            {(loading || loadingStage === 'minor' || error) && (
+                <div className={`progressive-loading-status ${error ? 'error' : ''}`}>
+                    {error ? (
+                        <div className="status-error-icon">⚠️</div>
+                    ) : (
+                        <div className="status-spinner"></div>
+                    )}
+                    <span>
+                        {error ? (
+                            <>
+                                Failed to load details.
+                                <span className="status-retry-link" onClick={() => fetchData()}>Retry</span>
+                            </>
+                        ) : (
+                            loading ? 'Loading structure...' : 'Loading details...'
+                        )}
+                    </span>
                 </div>
             )}
 
