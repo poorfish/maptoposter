@@ -32,7 +32,7 @@ function LocationSearch({ onLocationSelect }) {
                         addressdetails: 1
                     },
                     headers: {
-                        'User-Agent': 'MapPosterGenerator/1.0'
+                        'User-Agent': 'Mapster/1.0'
                     }
                 })
                 setResults(response.data)

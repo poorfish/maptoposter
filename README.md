@@ -1,4 +1,4 @@
-# Map Poster Generator
+# Mapster
 
 A React web application for creating beautiful, minimalist map posters for any location in the world. Search for a city, customize the theme and layout, then download your poster as SVG or PNG.
 
