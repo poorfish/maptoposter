@@ -81,6 +81,28 @@ function PreviewPanel({
         }
     }, [isOutOfSync, onSyncStatusChange])
 
+    // Close download menu when clicking outside
+    useEffect(() => {
+        if (!downloadMenuOpen) return
+
+        const handleClickOutside = (event) => {
+            // Check if click is outside the download wrapper
+            const downloadWrapper = event.target.closest('.download-wrapper')
+            if (!downloadWrapper) {
+                setDownloadMenuOpen(false)
+            }
+        }
+
+        // Add listener with a small delay to avoid immediate closure
+        const timeoutId = setTimeout(() => {
+            document.addEventListener('click', handleClickOutside)
+        }, 0)
+
+        return () => {
+            clearTimeout(timeoutId)
+            document.removeEventListener('click', handleClickOutside)
+        }
+    }, [downloadMenuOpen])
 
 
     return (
