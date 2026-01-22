@@ -32,13 +32,19 @@ function MapPanel({ center, zoom, distance, isOutOfSync, hasGenerated, onMapChan
                 center: center,
                 zoom: zoom,
                 zoomControl: true,
+                attributionControl: false, // Disable default attribution to avoid duplicates
             })
 
             // Add tile layer - CartoDB Dark Matter (Dark Gray)
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                attribution: '© OpenStreetMap contributors © CartoDB',
                 maxZoom: 19,
             }).addTo(map)
+
+            // Add single custom attribution control with dark theme
+            L.control.attribution({
+                position: 'bottomright',
+                prefix: 'Leaflet'
+            }).addAttribution('© OpenStreetMap | © CartoDB').addTo(map)
 
             // Add circle to show poster boundary - Using Refinity Gold
             const circle = L.circle(center, {
