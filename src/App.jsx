@@ -46,7 +46,17 @@ function App() {
             }
             return center;
         })
-        setMapZoom(prevZoom => prevZoom === zoom ? prevZoom : zoom)
+
+        setMapZoom(prevZoom => {
+            if (prevZoom === zoom) return prevZoom;
+
+            // Calculate new distance based on zoom
+            // Base: Zoom 13 = 5000m. Formula: 5000 * 2^(13 - zoom)
+            const newDistance = Math.round(5000 * Math.pow(2, 13 - zoom));
+            setDistance(newDistance);
+
+            return zoom;
+        })
     }, [])
 
     const handleLocationSelect = useCallback((location) => {
