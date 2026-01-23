@@ -21,9 +21,8 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    width: 100%;
+    width: calc(100% - var(--spacing-xl) * 2);
     max-width: 500px;
-    padding: 0 var(--spacing-md);
 }
 
 .map-generate-btn-container {

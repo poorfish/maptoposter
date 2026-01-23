@@ -376,18 +376,44 @@ function PreviewPanel({
                                     <div className="menu-group">
                                         <label>Orientation</label>
                                         <div className="toggle-group full-width">
-                                            <button className={`toggle-btn ${orientation === 'portrait' ? 'active' : ''}`} onClick={() => onOrientationChange('portrait')}>Portrait</button>
-                                            <button className={`toggle-btn ${orientation === 'landscape' ? 'active' : ''}`} onClick={() => onOrientationChange('landscape')}>Landscape</button>
+                                            <button
+                                                className={`toggle-btn ${orientation === 'portrait' ? 'active' : ''}`}
+                                                onClick={() => onOrientationChange('portrait')}
+                                            >
+                                                <svg width="14" height="18" viewBox="0 0 14 18" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <rect x="1" y="1" width="12" height="16" rx="2" />
+                                                </svg>
+                                                <span>Portrait</span>
+                                            </button>
+                                            <button
+                                                className={`toggle-btn ${orientation === 'landscape' ? 'active' : ''}`}
+                                                onClick={() => onOrientationChange('landscape')}
+                                            >
+                                                <svg width="18" height="14" viewBox="0 0 18 14" fill="none" stroke="currentColor" strokeWidth="2">
+                                                    <rect x="1" y="1" width="16" height="12" rx="2" />
+                                                </svg>
+                                                <span>Landscape</span>
+                                            </button>
                                         </div>
                                     </div>
                                     <div className="menu-group">
                                         <label>Aspect Ratio</label>
-                                        <select className="ratio-select full-width" value={aspectRatio} onChange={(e) => onAspectRatioChange(e.target.value)}>
-                                            <option value="2:3">2:3 (Classic)</option>
-                                            <option value="3:4">3:4 (Standard)</option>
-                                            <option value="4:5">4:5 (Modern)</option>
-                                            <option value="1:1">1:1 (Square)</option>
-                                        </select>
+                                        <div className="font-grid">
+                                            {[
+                                                { label: '2:3 Classic', value: '2:3' },
+                                                { label: '3:4 Standard', value: '3:4' },
+                                                { label: '4:5 Modern', value: '4:5' },
+                                                { label: '1:1 Square', value: '1:1' }
+                                            ].map(ratio => (
+                                                <button
+                                                    key={ratio.value}
+                                                    className={`font-chip ${aspectRatio === ratio.value ? 'active' : ''}`}
+                                                    onClick={() => onAspectRatioChange(ratio.value)}
+                                                >
+                                                    {ratio.label}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             )}
