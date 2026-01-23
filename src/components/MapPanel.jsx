@@ -12,10 +12,9 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 })
 
-function MapPanel({ center, zoom, distance, isOutOfSync, hasGenerated, onMapChange, onLocationSelect, onDistanceChange, onUpdatePreview }) {
+function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLocationSelect, onUpdatePreview }) {
     const mapRef = useRef(null)
     const mapInstanceRef = useRef(null)
-    const circleRef = useRef(null)
     const markerRef = useRef(null)
     const resizeObserverRef = useRef(null)
 
@@ -46,20 +45,30 @@ function MapPanel({ center, zoom, distance, isOutOfSync, hasGenerated, onMapChan
                 prefix: 'Leaflet'
             }).addAttribution('© OpenStreetMap | © CartoDB').addTo(map)
 
-            // Add circle to show poster boundary - Using Refinity Gold
-            const circle = L.circle(center, {
-                radius: distance,
-                color: '#d4af37',
-                fillColor: '#d4af37',
-                fillOpacity: 0.1,
-                weight: 2,
-            }).addTo(map)
-
-            // Add center marker
-            const marker = L.marker(center).addTo(map)
+            // Add center marker with custom gold SVG icon
+            const goldIcon = L.divIcon({
+                className: 'custom-gold-marker',
+                html: `
+                    <svg width="20" height="28" viewBox="0 0 20 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 0C4.477 0 0 4.477 0 10C0 15.523 10 28 10 28C10 28 20 15.523 20 10C20 4.477 15.523 0 10 0Z" fill="#D4AF37"/>
+                        <path d="M10 0C4.477 0 0 4.477 0 10C0 15.523 10 28 10 28C10 28 20 15.523 20 10C20 4.477 15.523 0 10 0Z" fill="url(#gold-gradient)"/>
+                        <circle cx="10" cy="10" r="3.5" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+                        <defs>
+                            <linearGradient id="gold-gradient" x1="10" y1="0" x2="10" y2="20" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#F4D03F"/>
+                                <stop offset="50%" stop-color="#D4AF37"/>
+                                <stop offset="100%" stop-color="#C9A227"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                `,
+                iconSize: [20, 28],
+                iconAnchor: [10, 28],
+                popupAnchor: [0, -28]
+            })
+            const marker = L.marker(center, { icon: goldIcon }).addTo(map)
 
             mapInstanceRef.current = map
-            circleRef.current = circle
             markerRef.current = marker
 
             // Listen to map events
@@ -70,8 +79,7 @@ function MapPanel({ center, zoom, distance, isOutOfSync, hasGenerated, onMapChan
                 // Only trigger update if values actually changed to avoid unnecessary parent re-renders
                 callbacksRef.current.onMapChange([newCenter.lat, newCenter.lng], newZoom)
 
-                // Update circle and marker position
-                circle.setLatLng(newCenter)
+                // Update marker position
                 marker.setLatLng(newCenter)
             }
 
@@ -106,12 +114,7 @@ function MapPanel({ center, zoom, distance, isOutOfSync, hasGenerated, onMapChan
         }
     }, []) // Init only once
 
-    // Update circle radius when distance changes
-    useEffect(() => {
-        if (circleRef.current) {
-            circleRef.current.setRadius(distance)
-        }
-    }, [distance])
+
 
     // Update map view when center/zoom props change externally
     useEffect(() => {
@@ -129,9 +132,6 @@ function MapPanel({ center, zoom, distance, isOutOfSync, hasGenerated, onMapChan
             if (latDiff > 0.00001 || lngDiff > 0.00001 || zoomDiff > 0.1) {
                 mapInstanceRef.current.setView(center, zoom)
 
-                if (circleRef.current) {
-                    circleRef.current.setLatLng(center)
-                }
                 if (markerRef.current) {
                     markerRef.current.setLatLng(center)
                 }
@@ -153,9 +153,11 @@ function MapPanel({ center, zoom, distance, isOutOfSync, hasGenerated, onMapChan
                 <LocationSearch onLocationSelect={handleLocationSelect} />
             </div>
 
-            {/* Preview Button - Top Right */}
+            <div ref={mapRef} className="map-container"></div>
+
+            {/* Generate Button - Bottom Center */}
             {onUpdatePreview && (
-                <div className="map-preview-btn-container">
+                <div className="map-generate-btn-container">
                     <button
                         className={`map-preview-btn glass ${isOutOfSync ? 'stale' : ''}`}
                         onClick={onUpdatePreview}
@@ -169,24 +171,6 @@ function MapPanel({ center, zoom, distance, isOutOfSync, hasGenerated, onMapChan
                     </button>
                 </div>
             )}
-
-            <div ref={mapRef} className="map-container"></div>
-            <div className="map-controls-bottom glass">
-                <div className="map-control-item">
-                    <div className="control-label">
-                        Poster Radius: <span>{(distance / 1000).toFixed(1)} km</span>
-                    </div>
-                    <input
-                        type="range"
-                        className="map-radius-slider"
-                        min="2000"
-                        max="30000"
-                        step="1000"
-                        value={distance}
-                        onChange={(e) => onDistanceChange(parseInt(e.target.value))}
-                    />
-                </div>
-            </div>
         </div>
     )
 }

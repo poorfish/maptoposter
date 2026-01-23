@@ -60,7 +60,6 @@ function App() {
     const handleFontChange = useCallback((font) => setFontFamily(font), [])
     const handleCityChange = useCallback((city) => setCity(city), [])
     const handleCountryChange = useCallback((val) => setCountry(val), [])
-    const handleDistanceChange = useCallback((dist) => setDistance(dist), [])
     const handleOrientationChange = useCallback((orient) => setOrientation(orient), [])
     const handleAspectRatioChange = useCallback((ratio) => setAspectRatio(ratio), [])
 
@@ -71,12 +70,10 @@ function App() {
                     <MapPanel
                         center={mapCenter}
                         zoom={mapZoom}
-                        distance={distance}
                         isOutOfSync={isOutOfSync}
                         hasGenerated={hasGenerated}
                         onMapChange={handleMapChange}
                         onLocationSelect={handleLocationSelect}
-                        onDistanceChange={handleDistanceChange}
                         onUpdatePreview={updatePreviewHandler}
                     />
                     <PreviewPanel
@@ -94,7 +91,6 @@ function App() {
                         onFontChange={handleFontChange}
                         onCityChange={handleCityChange}
                         onCountryChange={handleCountryChange}
-                        onDistanceChange={handleDistanceChange}
                         onOrientationChange={handleOrientationChange}
                         onAspectRatioChange={handleAspectRatioChange}
                         onSyncStatusChange={handleSyncStatusChange}

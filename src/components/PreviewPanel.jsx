@@ -19,7 +19,6 @@ function PreviewPanel({
     onFontChange,
     onCityChange,
     onCountryChange,
-    onDistanceChange,
     onOrientationChange,
     onAspectRatioChange,
     onUpdatePreview,
