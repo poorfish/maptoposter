@@ -29,6 +29,7 @@ function PreviewPanel({
     const [isExporting, setIsExporting] = useState(false)
     const [refreshKey, setRefreshKey] = useState(0)
     const [activeTab, setActiveTab] = useState(null) // 'layout', 'labels', 'typography', 'theme'
+    const [touchStartY, setTouchStartY] = useState(null)
     const themeNames = getThemeNames()
 
     // Store the params that are currently rendered in the poster
@@ -105,6 +106,22 @@ function PreviewPanel({
             document.removeEventListener('click', handleClickOutside)
         }
     }, [downloadMenuOpen])
+
+    const handleTouchStart = (e) => {
+        setTouchStartY(e.touches[0].clientY)
+    }
+
+    const handleTouchEnd = (e) => {
+        if (touchStartY === null) return
+
+        const touchEndY = e.changedTouches[0].clientY
+        const swipeThreshold = 50 // pixels to swipe down to close
+
+        if (touchEndY - touchStartY > swipeThreshold) {
+            setActiveTab(null)
+        }
+        setTouchStartY(null)
+    }
 
 
     return (
@@ -399,10 +416,13 @@ function PreviewPanel({
 
                 {/* Bottom Sheet for Mobile */}
                 {activeTab && (
-                    <div className="bottom-sheet glass active">
+                    <div
+                        className="bottom-sheet glass active"
+                        onTouchStart={handleTouchStart}
+                        onTouchEnd={handleTouchEnd}
+                    >
                         <div className="bottom-sheet-header">
                             <div className="drag-indicator"></div>
-                            <button className="close-btn" onClick={() => setActiveTab(null)}>&times;</button>
                         </div>
                         <div className="bottom-sheet-content">
                             {activeTab === 'layout' && (

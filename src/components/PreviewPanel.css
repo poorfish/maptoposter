@@ -686,7 +686,8 @@
         bottom: 0;
         left: 0;
         right: 0;
-        height: calc(64px + env(safe-area-inset-bottom, 0px));
+        height: calc(72px + env(safe-area-inset-bottom, 0px));
+        /* Slighly height for touch items */
         background: rgba(10, 10, 10, 0.9) !important;
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
@@ -788,7 +789,16 @@
 .mobile-settings-menu {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
+}
+
+.mobile-settings-menu .footer-input {
+    height: 44px;
+    font-size: 0.9rem;
+}
+
+.mobile-settings-menu .toggle-group {
+    height: 44px;
 }
 
 .menu-group {
@@ -811,9 +821,9 @@
 
 .mobile-theme-grid {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 16px 8px;
-    /* More vertical breath */
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    /* More items per row */
+    gap: 20px 10px;
     width: 100%;
 }
 
@@ -837,9 +847,10 @@
 }
 
 .theme-preview {
-    width: 100%;
-    aspect-ratio: 1/1;
-    border-radius: 8px;
+    width: 32px;
+    /* Smaller circles */
+    height: 32px;
+    border-radius: 50%;
     position: relative;
     border: 1px solid var(--border-color);
     background: var(--bg-tertiary);
@@ -854,11 +865,12 @@
 
 .theme-preview .accent-line {
     position: absolute;
-    bottom: 4px;
-    left: 4px;
-    right: 4px;
-    height: 3px;
-    border-radius: 1.5px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 35%;
+    /* Cross section look */
+    border-radius: 0;
 }
 
 .mobile-theme-card span {
