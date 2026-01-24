@@ -592,8 +592,9 @@
     display: none;
     width: 100%;
     justify-content: space-around;
-    padding: 10px 0;
-    height: 60px;
+    align-items: center;
+    height: 100%;
+    padding: 0;
 }
 
 .nav-item {
@@ -683,20 +684,22 @@
     /* Fixed UI elements to be absolute instead to slide with panel */
     .preview-footer-settings {
         position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: calc(72px + env(safe-area-inset-bottom, 0px));
-        /* Slighly height for touch items */
+        bottom: calc(var(--spacing-md) + env(safe-area-inset-bottom, 0px));
+        left: var(--spacing-md);
+        right: var(--spacing-md);
+        height: 72px;
         background: rgba(10, 10, 10, 0.9) !important;
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border-top: 1px solid var(--border-color);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
         z-index: 3000;
         display: flex !important;
-        padding: 0 0 env(safe-area-inset-bottom, 0px) 0;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
         margin: 0;
-        border-radius: 0;
+        border-radius: var(--radius-xl);
     }
 
     .bottom-sheet {
@@ -714,8 +717,8 @@
         min-height: 0;
         height: calc(100dvh - 54px);
         /* Viewport minus header */
-        padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
-        /* Space for the absolute footer */
+        padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+        /* Space for the floating footer (72px + 16px margin) */
     }
 
     .preview-content {

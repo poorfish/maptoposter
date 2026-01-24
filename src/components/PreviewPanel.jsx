@@ -375,8 +375,10 @@ function PreviewPanel({
                             onClick={() => setActiveTab(activeTab === 'layout' ? null : 'layout')}
                         >
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="9" y1="3" x2="9" y2="21"></line>
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
                             </svg>
                             <span>Layout</span>
                         </button>
@@ -405,9 +407,13 @@ function PreviewPanel({
                             className={`nav-item ${activeTab === 'theme' ? 'active' : ''}`}
                             onClick={() => setActiveTab(activeTab === 'theme' ? null : 'theme')}
                         >
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <path d="M12 2a10 10 0 0 0-10 10c0 5.514 4.486 10 10 10s10-4.486 10-10A10 10 0 0 0 12 2zm1 17.938V18h-2v1.938A8.02 8.02 0 0 1 4.062 13H6v-2H4.062A8.02 8.02 0 0 1 11 4.062V6h2V4.062A8.02 8.02 0 0 1 19.938 11H18v2h1.938A8.02 8.02 0 0 1 13 19.938z"></path>
+                            <svg width="24" height="24" viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round">
+                                <rect width="256" height="256" fill="none" stroke="none" />
+                                <path d="M128,192a24,24,0,0,1,24-24h46.21a24,24,0,0,0,23.4-18.65A96.48,96.480,0,0,0,224,127.17c-.45-52.82-44.16-95.7-97-95.17a96,96,0,0,0-95,96c0,41.81,26.73,73.44,64,86.61A24,24,0,0,0,128,192Z" fill="none" />
+                                <circle cx="128" cy="76" r="12" fill="currentColor" stroke="none" />
+                                <circle cx="84" cy="100" r="12" fill="currentColor" stroke="none" />
+                                <circle cx="84" cy="156" r="12" fill="currentColor" stroke="none" />
+                                <circle cx="172" cy="100" r="12" fill="currentColor" stroke="none" />
                             </svg>
                             <span>Theme</span>
                         </button>
