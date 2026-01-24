@@ -37,18 +37,19 @@
 }
 
 .divider-handle {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 3px;
-    opacity: 0.5;
+    /* Slightly wider gap for airiness with tiny dots */
+    opacity: 0.6;
     transition: opacity var(--transition-fast);
 }
 
-.divider-line {
-    width: 2px;
-    height: 16px;
+.divider-dot {
+    width: 1px;
+    height: 1px;
     background: var(--text-secondary);
-    border-radius: 1px;
+    border-radius: 50%;
 }
 
 /* Active dragging state */

@@ -66,9 +66,14 @@ function SplitPane({ children, mobileView }) {
                 onMouseDown={handleMouseDown}
             >
                 <div className="divider-handle">
-                    <div className="divider-line"></div>
-                    <div className="divider-line"></div>
-                    <div className="divider-line"></div>
+                    <div className="divider-dot"></div>
+                    <div className="divider-dot"></div>
+                    <div className="divider-dot"></div>
+                    <div className="divider-dot"></div>
+                    <div className="divider-dot"></div>
+                    <div className="divider-dot"></div>
+                    <div className="divider-dot"></div>
+                    <div className="divider-dot"></div>
                 </div>
             </div>
 
