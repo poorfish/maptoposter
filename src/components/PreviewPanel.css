@@ -228,7 +228,6 @@
     position: relative;
     background: #080808;
     min-height: 0;
-    /* Important for flex children */
 }
 
 .back-mobile-btn {
@@ -251,18 +250,13 @@
     overflow: auto;
     padding: var(--spacing-xl);
     padding-bottom: 160px;
-    /* Slightly more space for floating footer */
 
-    /* Hide scrollbar for Chrome, Safari and Opera */
     &::-webkit-scrollbar {
         display: none;
     }
 
-    /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none;
-    /* IE and Edge */
     scrollbar-width: none;
-    /* Firefox */
 }
 
 .preview-footer-settings {
@@ -273,12 +267,9 @@
     z-index: 100;
 
     height: auto;
-    /* Ensure it grows with content */
     display: block;
-    /* Change from flex to block to allow grid child to define height */
     padding: 0.8rem 1.2rem;
     padding-bottom: calc(0.8rem + 10px);
-    /* Extra room at bottom */
 
     background: rgba(20, 20, 20, 0.4) !important;
     backdrop-filter: blur(28px) saturate(180%);
@@ -288,13 +279,11 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 
     overflow: visible;
-    /* Ensure shadows and content aren't clipped */
 }
 
 .desktop-settings-only {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    /* Force exactly equal width */
     width: 100%;
     gap: var(--spacing-xl);
     align-items: start;
@@ -306,7 +295,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
-    /* Vertical gap between setting blocks */
 }
 
 .section-header {
@@ -330,7 +318,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.3rem;
-    /* Gap between Label and Control */
 }
 
 .footer-setting.wide {
@@ -358,7 +345,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    /* Standardized to match .footer-setting */
 }
 
 .footer-input {
@@ -366,7 +352,6 @@
     border: 1px solid var(--border-color);
     padding: 0 0.7rem;
     height: 32px;
-    /* Unified height */
     border-radius: var(--radius-md);
     font-size: 0.8rem;
     width: 100%;
@@ -392,12 +377,9 @@
     border: 1px solid var(--border-color);
     padding: 0 2.2rem 0 0.6rem;
     height: 32px;
-    /* Unified height */
     border-radius: var(--radius-md);
     font-size: 0.8rem;
-    /* Slightly smaller font to fit more */
     width: 100%;
-    /* Changed from min-width to 100% */
     transition: var(--transition-fast);
     cursor: pointer;
     white-space: nowrap;
@@ -422,11 +404,9 @@
     border: 1px solid var(--border-color);
     padding: 0 2.2rem 0 0.6rem;
     height: 32px;
-    /* Unified height */
     border-radius: var(--radius-md);
     font-size: 0.8rem;
     width: 100%;
-    /* Changed from min-width to 100% */
     transition: var(--transition-fast);
     cursor: pointer;
 }
@@ -439,7 +419,6 @@
     padding: 2px;
     width: 100%;
     height: 32px;
-    /* Unified height */
 }
 
 .toggle-btn {
@@ -461,7 +440,6 @@
 
 .btn-label {
     display: none;
-    /* Icons only by default for elegance and zero overlap */
     font-size: 0.75rem;
     font-weight: 600;
 }
@@ -485,7 +463,6 @@
     transform: scale(1.1);
 }
 
-/* Show labels only when there is massive horizontal space */
 @media (min-width: 1500px) {
     .btn-label {
         display: inline;
@@ -496,12 +473,6 @@
     }
 }
 
-.toggle-btn.active {
-    background: var(--bg-secondary);
-    color: var(--accent-primary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
 .toggle-btn:hover:not(.active) {
     color: var(--text-primary);
 }
@@ -509,29 +480,41 @@
 .theme-dots-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    max-width: 180px;
+    gap: 8px;
+    max-width: 220px;
 }
 
 .theme-dot {
-    width: 16px;
+    width: 24px;
     height: 16px;
-    border-radius: 50%;
-    border: 2px solid transparent;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: transparent;
     cursor: pointer;
     transition: all var(--transition-fast);
+    padding: 0;
+    overflow: hidden;
+    position: relative;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
 }
 
+.theme-map-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+}
+
 .theme-dot:hover {
-    transform: scale(1.15);
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .theme-dot.active {
     border-color: var(--accent-primary);
-    transform: scale(1.2);
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    z-index: 2;
 }
 
 .styled-range-footer {
@@ -587,7 +570,6 @@
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
-/* Mobile responsiveness */
 .mobile-nav {
     display: none;
     width: 100%;
@@ -681,7 +663,6 @@
         width: 160px;
     }
 
-    /* Fixed UI elements to be absolute instead to slide with panel */
     .preview-footer-settings {
         position: absolute;
         bottom: calc(var(--spacing-md) + env(safe-area-inset-bottom, 0px));
@@ -708,7 +689,6 @@
         left: 0;
         right: 0;
         z-index: 3100;
-        /* Above the footer settings */
         border-radius: 20px 20px 0 0;
     }
 
@@ -716,9 +696,7 @@
         flex: 1;
         min-height: 0;
         height: calc(100dvh - 54px);
-        /* Viewport minus header */
         padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px));
-        /* Space for the floating footer (72px + 16px margin) */
     }
 
     .preview-content {
@@ -745,7 +723,6 @@
 
 .bottom-sheet {
     position: absolute;
-    /* Shift from fixed to absolute within parent */
     bottom: -100%;
     left: 0;
     right: 0;
@@ -765,7 +742,6 @@
 .bottom-sheet.active {
     bottom: 0;
     padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
-    /* Slightly more space for the footer padding */
     opacity: 1;
     visibility: visible;
 }
@@ -782,14 +758,6 @@
     height: 4px;
     background: var(--border-color);
     border-radius: 2px;
-}
-
-.close-btn {
-    position: absolute;
-    right: 16px;
-    top: 8px;
-    font-size: 24px;
-    color: var(--text-muted);
 }
 
 .bottom-sheet-content {
@@ -832,8 +800,7 @@
 
 .mobile-theme-grid {
     display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    /* More items per row */
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px 10px;
     width: 100%;
 }
@@ -845,11 +812,9 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    /* Tighter gap to label */
     align-items: center;
     transition: transform var(--transition-fast);
     min-width: 0;
-    /* CRITICAL: prevents long labels from stretching columns */
     width: 100%;
 }
 
@@ -858,10 +823,9 @@
 }
 
 .theme-preview {
-    width: 32px;
-    /* Smaller circles */
-    height: 32px;
-    border-radius: 50%;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    border-radius: var(--radius-sm);
     position: relative;
     border: 1px solid var(--border-color);
     background: var(--bg-tertiary);
@@ -869,25 +833,20 @@
     transition: all var(--transition-fast);
 }
 
+.theme-map-svg-mobile {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
 .mobile-theme-card.active .theme-preview {
     border-color: var(--accent-primary);
     box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
 }
 
-.theme-preview .accent-line {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 35%;
-    /* Cross section look */
-    border-radius: 0;
-}
-
 .mobile-theme-card span {
     display: block;
     font-size: 0.65rem;
-    /* Larger font */
     font-weight: 600;
     text-align: center;
     width: 100%;
@@ -895,7 +854,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     color: var(--text-secondary);
-    /* Brighter color */
     margin-top: 2px;
 }
 
@@ -906,14 +864,12 @@
 .font-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    /* 2 columns for better touch targets */
     gap: 10px;
     width: 100%;
 }
 
 .font-chip {
     height: 44px;
-    /* Touch target size */
     background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
     border-radius: 12px;

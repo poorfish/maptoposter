@@ -4,6 +4,62 @@ import PosterRenderer from './PosterRenderer'
 import { exportSVG, exportPNG, generateFilename } from '../utils/exportUtils'
 import { getThemeNames, getTheme } from '../data/themes'
 
+// Deterministic random numbers based on a seed (string)
+const getSeededRandom = (seed) => {
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+        hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return (index) => {
+        const x = Math.sin(hash + index) * 10000;
+        return x - Math.floor(x);
+    };
+};
+
+// Miniature map preview component with unique geometry per theme
+const ThemeMapPreview = ({ themeName, className, style }) => {
+    const t = getTheme(themeName);
+    const rnd = getSeededRandom(themeName);
+
+    // Water: Organic curve
+    const rY = 40 + (rnd(1) * 20 - 10);
+    const waterD = `M0,${rY} Q30,${rY - 25 * rnd(2)} 70,${rY + 15 * rnd(3)} T120,${rY - 10 * rnd(4)} L120,80 L0,80 Z`;
+
+    // Parks: Blobs
+    const p1D = `M${20 + rnd(5) * 30},${15 + rnd(6) * 15} Q${40 + rnd(7) * 20},${5 + rnd(8) * 5} ${60 + rnd(9) * 20},${25 + rnd(10) * 10} Q${50 + rnd(11) * 10},${45 + rnd(12) * 5} ${20 + rnd(13) * 10},${35 + rnd(14) * 10} Z`;
+    const p2D = `M${80 + rnd(15) * 20},${45 + rnd(16) * 15} Q${110 + rnd(17) * 10},${35 + rnd(18) * 10} ${110 + rnd(19) * 5},${65 + rnd(20) * 10} Q${90 + rnd(21) * 10},${75 + rnd(22) * 5} ${80 + rnd(23) * 10},${55 + rnd(24) * 10} Z`;
+
+    // Roads: All Quadratic Bézier Curves for natural flow
+    const mY1 = 20 + rnd(25) * 40;
+    const mY2 = 20 + rnd(26) * 40;
+    const motorwayD = `M-10,${mY1} Q60,${(mY1 + mY2) / 2 + (rnd(27) * 40 - 20)} 130,${mY2}`;
+
+    const pX1 = 30 + rnd(28) * 60;
+    const pX2 = 30 + rnd(29) * 60;
+    const primaryD = `M${pX1},-10 Q${(pX1 + pX2) / 2 + (rnd(30) * 30 - 15)},40 ${pX2},90`;
+
+    // Secondary "vines" - random curved segments
+    const s1D = `M${rnd(31) * 100},${rnd(32) * 80} Q${rnd(33) * 120},${rnd(34) * 80} ${rnd(35) * 120},${rnd(36) * 80}`;
+    const s2D = `M${rnd(37) * 120},${rnd(38) * 80} Q${rnd(39) * 120},${rnd(40) * 80} ${rnd(41) * 100},${rnd(42) * 100}`;
+
+    return (
+        <svg
+            className={className}
+            style={{ ...style, background: t.bg }}
+            viewBox="0 0 120 80"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path d={waterD} fill={t.water} opacity="0.8" />
+            <path d={p1D} fill={t.parks} opacity="0.7" />
+            <path d={p2D} fill={t.parks} opacity="0.7" />
+            <path d={s1D} fill="none" stroke={t.road_secondary} strokeWidth="1.2" opacity="0.5" strokeLinecap="round" />
+            <path d={s2D} fill="none" stroke={t.road_secondary} strokeWidth="1.2" opacity="0.5" strokeLinecap="round" />
+            <path d={primaryD} fill="none" stroke={t.road_primary} strokeWidth="2.8" strokeLinecap="round" />
+            <path d={motorwayD} fill="none" stroke={t.road_motorway} strokeWidth="4.5" strokeLinecap="round" />
+        </svg>
+    );
+};
+
 function PreviewPanel({
     mapCenter,
     distance,
@@ -352,15 +408,15 @@ function PreviewPanel({
                                 <div className="setting-label">{getTheme(theme).name}</div>
                                 <div className="theme-dots-container">
                                     {themeNames.map(name => {
-                                        const t = getTheme(name);
                                         return (
                                             <button
                                                 key={name}
                                                 className={`theme-dot ${theme === name ? 'active' : ''}`}
                                                 onClick={() => onThemeChange(name)}
-                                                style={{ background: t.bg, '--dot-accent': t.road_primary }}
-                                                title={t.name}
-                                            />
+                                                title={getTheme(name).name}
+                                            >
+                                                <ThemeMapPreview themeName={name} className="theme-map-svg" />
+                                            </button>
                                         );
                                     })}
                                 </div>
@@ -535,8 +591,8 @@ function PreviewPanel({
                                                             setActiveTab(null);
                                                         }}
                                                     >
-                                                        <div className="theme-preview" style={{ background: t.bg }}>
-                                                            <div className="accent-line" style={{ background: t.road_primary }}></div>
+                                                        <div className="theme-preview">
+                                                            <ThemeMapPreview themeName={name} className="theme-map-svg-mobile" />
                                                         </div>
                                                         <span>{t.name}</span>
                                                     </button>
