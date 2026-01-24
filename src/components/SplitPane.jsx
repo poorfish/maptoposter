@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import './SplitPane.css'
 
-function SplitPane({ children }) {
+function SplitPane({ children, mobileView }) {
     const [leftWidth, setLeftWidth] = useState(50) // percentage
     const [isDragging, setIsDragging] = useState(false)
     const containerRef = useRef(null)
@@ -53,7 +53,7 @@ function SplitPane({ children }) {
     }, [isDragging])
 
     return (
-        <div className="split-pane" ref={containerRef}>
+        <div className={`split-pane ${mobileView ? `view-${mobileView}` : ''}`} ref={containerRef}>
             <div
                 className="split-pane-left"
                 style={{ width: `${leftWidth}%` }}

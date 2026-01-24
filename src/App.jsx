@@ -30,10 +30,18 @@ function App() {
     const [isOutOfSync, setIsOutOfSync] = useState(false)
     const [updatePreviewHandler, setUpdatePreviewHandler] = useState(null)
     const [hasGenerated, setHasGenerated] = useState(false)
+    const [mobileView, setMobileView] = useState('map') // 'map' or 'preview'
 
     const handleSyncStatusChange = useCallback((outOfSync, handler, hasGenerated) => {
         setIsOutOfSync(outOfSync)
-        setUpdatePreviewHandler(() => handler)
+
+        // Wrap the handler to also switch view on mobile
+        const wrappedHandler = () => {
+            if (handler) handler();
+            setMobileView('preview');
+        };
+
+        setUpdatePreviewHandler(() => wrappedHandler)
         setHasGenerated(hasGenerated)
     }, [])
 
@@ -76,7 +84,7 @@ function App() {
     return (
         <div className="app-container">
             <main className="app-main full-height">
-                <SplitPane>
+                <SplitPane mobileView={mobileView}>
                     <MapPanel
                         center={mapCenter}
                         zoom={mapZoom}
@@ -104,6 +112,7 @@ function App() {
                         onOrientationChange={handleOrientationChange}
                         onAspectRatioChange={handleAspectRatioChange}
                         onSyncStatusChange={handleSyncStatusChange}
+                        onSwitchView={setMobileView}
                     />
                 </SplitPane>
             </main>

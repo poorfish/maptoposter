@@ -33,6 +33,9 @@
 
 .header-right {
     justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
 }
 
 .preview-title-container {
@@ -93,6 +96,17 @@
     background: rgba(212, 175, 55, 0.1);
     border-color: rgba(212, 175, 55, 0.3);
     transform: scale(1.05);
+}
+
+.icon-button.highlight {
+    background: transparent;
+    color: var(--accent-primary);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+}
+
+.icon-button.highlight:hover {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: var(--accent-primary);
 }
 
 .preview-trigger-btn {
@@ -213,6 +227,16 @@
     overflow: hidden;
     position: relative;
     background: #080808;
+    min-height: 0;
+    /* Important for flex children */
+}
+
+.back-mobile-btn {
+    display: none !important;
+}
+
+.mobile-only-inline {
+    display: none !important;
 }
 
 .preview-content {
@@ -600,21 +624,122 @@
     background: rgba(212, 175, 55, 0.1);
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 768px) {
+    .preview-header {
+        height: 54px;
+        padding: 0 var(--spacing-md);
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .back-mobile-btn {
+        display: flex !important;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    .mobile-only-inline {
+        display: inline-block !important;
+    }
+
+    .preview-panel {
+        height: 100vh !important;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .header-center {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        pointer-events: none;
+        white-space: nowrap;
+    }
+
+    .header-center * {
+        pointer-events: auto;
+    }
+
+    .header-left,
+    .header-right {
+        z-index: 5;
+    }
+
+    .preview-title {
+        display: block !important;
+        font-size: 0.95rem;
+        letter-spacing: 1px;
+    }
+
+    .download-menu {
+        left: auto !important;
+        right: 0 !important;
+        width: 160px;
+    }
+
+    /* Fixed UI elements to be absolute instead to slide with panel */
+    .preview-footer-settings {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 64px;
+        background: rgba(10, 10, 10, 0.9) !important;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid var(--border-color);
+        z-index: 3000;
+        display: flex !important;
+        padding: 0;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .bottom-sheet {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 3100;
+        /* Above the footer settings */
+        border-radius: 20px 20px 0 0;
+    }
+
+    .preview-content-container {
+        flex: 1;
+        min-height: 0;
+        height: calc(100vh - 54px);
+        /* Viewport minus header */
+        padding-bottom: 64px;
+        /* Space for the absolute footer */
+    }
+
+    .preview-content {
+        padding: var(--spacing-md);
+        height: 100%;
+    }
+
     .desktop-settings-only {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        display: none;
+    }
+
+    .mobile-nav {
+        display: flex;
     }
 }
 
 .bottom-sheet {
-    position: fixed;
+    position: absolute;
+    /* Shift from fixed to absolute within parent */
     bottom: -100%;
     left: 0;
     right: 0;
     background: var(--bg-secondary);
     border-top: 1px solid var(--border-color);
     border-radius: 28px 28px 0 0;
-    z-index: 1000;
+    z-index: 3100;
     transition: all 0.5s cubic-bezier(0.32, 0.72, 0, 1);
     max-height: 80vh;
     display: flex;
@@ -626,9 +751,8 @@
 
 .bottom-sheet.active {
     bottom: 0;
-    /* Align with bottom since it's already fixed */
-    padding-bottom: 70px;
-    /* Space for nav bar */
+    padding-bottom: 74px;
+    /* Slightly more space for the footer padding */
     opacity: 1;
     visibility: visible;
 }
@@ -799,50 +923,5 @@
     to {
         transform: translateY(0);
         opacity: 1;
-    }
-}
-
-@media (max-width: 768px) {
-    .preview-header {
-        height: 50px;
-        padding: 0 var(--spacing-md);
-    }
-
-    .preview-header .header-center h2 {
-        display: none;
-    }
-
-    .preview-content {
-        padding: var(--spacing-md);
-    }
-
-    .desktop-settings-only {
-        display: none;
-    }
-
-    .mobile-nav {
-        display: flex;
-    }
-
-    .preview-footer-settings {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: 0;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-        padding: 0;
-        height: 60px;
-        min-height: 60px;
-        background: rgba(10, 10, 10, 0.8) !important;
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border-top: 1px solid var(--border-color);
-    }
-
-    .preview-content-container {
-        padding-bottom: 20px;
     }
 }
