@@ -329,9 +329,23 @@ function PosterRenderer({ mapCenter, distance, city, country, theme, fontFamily,
 
                                 {/* Divider line - width matches country name */}
                                 {(() => {
-                                    // Estimate country text width
-                                    // For uppercase text with font-weight 300, approximately 0.6 * fontSize per character
-                                    const countryTextWidth = country.toUpperCase().length * countryFontSize * 0.6;
+                                    // Font width ratios (approximate width-to-height ratio for uppercase)
+                                    const fontWidthRatios = {
+                                        "'Courier Prime'": 0.65, // Monospace is wider
+                                        "'Playfair Display'": 0.55, // Serif is often narrower
+                                        "'Nunito'": 0.65, // Rounded is slightly wider
+                                        "'Outfit'": 0.62, // Geometric is average
+                                        "Montserrat": 0.65, // Wide stance
+                                        "Inter": 0.6 // Standard
+                                    };
+
+                                    // Get ratio for current font, defaulting to 0.6
+                                    const widthRatio = fontWidthRatios[fontFamily] || 0.6;
+
+                                    const charCount = country.toUpperCase().length;
+                                    const letterSpacing = 2;
+                                    // Apply font-specific width calculation
+                                    const countryTextWidth = (charCount * countryFontSize * widthRatio) + Math.max(0, (charCount - 1) * letterSpacing);
                                     const dividerHalfWidth = countryTextWidth / 2;
 
                                     return (
@@ -354,6 +368,7 @@ function PosterRenderer({ mapCenter, distance, city, country, theme, fontFamily,
                                     fontSize={countryFontSize}
                                     fontWeight="300"
                                     fontFamily={fontFamily}
+                                    style={{ letterSpacing: '2px' }}
                                 >
                                     {country.toUpperCase()}
                                 </text>
