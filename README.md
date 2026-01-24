@@ -6,6 +6,8 @@ English | [简体中文](README_CN.md)
 
 A React web application for creating beautiful, minimalist map posters for any location in the world. Search for a city, customize the theme and layout, then download your poster as SVG or PNG.
 
+**Live Demo:** [mymapster.vercel.app](https://mymapster.vercel.app/)
+
 ## Features
 
 - **Interactive Map** - Pan and zoom to select any location worldwide
