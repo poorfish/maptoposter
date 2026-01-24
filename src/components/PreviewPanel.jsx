@@ -113,13 +113,12 @@ function PreviewPanel({
                 {/* Left: Back Button (Mobile) or Download (Desktop) */}
                 <div className="header-left">
                     <button
-                        className="icon-button back-mobile-btn"
+                        className="icon-button back-mobile-btn highlight"
                         onClick={() => onSwitchView('map')}
                         title="Back to Map"
                     >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="19" y1="12" x2="5" y2="12"></line>
-                            <polyline points="12 19 5 12 12 5"></polyline>
+                            <polyline points="15 18 9 12 15 6"></polyline>
                         </svg>
                     </button>
 
