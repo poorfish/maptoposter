@@ -228,6 +228,10 @@
     position: relative;
     background: #080808;
     min-height: 0;
+
+    /* container query support for responsive layout */
+    container-type: inline-size;
+    container-name: preview-container;
 }
 
 .back-mobile-btn {
@@ -239,19 +243,15 @@
 }
 
 .preview-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    flex: 1;
+    /* 自动占据剩余全部空间 */
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    padding: 80px;
-    padding-bottom: 280px;
-    padding-top: 40px;
-    /* Accommodate navigation bar and floating settings */
+    padding: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    /* 移除之前硬编码的 padding-bottom */
 
     &::-webkit-scrollbar {
         display: none;
@@ -262,10 +262,11 @@
 }
 
 .preview-footer-settings {
-    position: absolute;
-    bottom: var(--spacing-lg);
-    left: var(--spacing-lg);
-    right: var(--spacing-lg);
+    position: relative;
+    /* 改为相对定位，使其参与 flex 布局计算空间 */
+    margin: var(--spacing-lg);
+    margin-top: 0;
+    /* 顶部不需要边距，由 flex 空间决定居中 */
     z-index: 100;
 
     height: auto;
@@ -290,6 +291,15 @@
     gap: var(--spacing-xl);
     align-items: start;
     height: auto;
+}
+
+@container preview-container (max-width: 900px) {
+    .desktop-settings-only {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-lg);
+    }
+
+    /* 这里无需再手动设置 padding-bottom，.preview-content 也会自动动态居中 */
 }
 
 .settings-section {
@@ -920,4 +930,27 @@
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+.desktop-font-chip {
+    height: 32px;
+    font-size: 0.75rem;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.desktop-font-chip:hover,
+.footer-input:hover {
+    border-color: var(--text-muted);
+}
+
+.desktop-font-chip.active {
+    background: var(--bg-tertiary);
+    color: var(--accent-primary);
+    border-color: var(--accent-primary);
+    box-shadow: none;
+}
+
+.desktop-font-grid {
+    gap: 8px;
 }

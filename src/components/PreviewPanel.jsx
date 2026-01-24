@@ -384,18 +384,19 @@ function PreviewPanel({
                             </div>
                             <div className="footer-setting">
                                 <div className="setting-label">Font Family</div>
-                                <select
-                                    className="font-select"
-                                    value={fontFamily}
-                                    onChange={(e) => onFontChange(e.target.value)}
-                                >
-                                    <option value="Inter">Inter (Sans)</option>
-                                    <option value="'Playfair Display'">Playfair Display (Serif)</option>
-                                    <option value="Montserrat">Montserrat (Modern)</option>
-                                    <option value="'Courier Prime'">Courier Prime (Mono)</option>
-                                    <option value="'Outfit'">Outfit (Geometric)</option>
-                                    <option value="'Nunito'">Nunito (Rounded Bold)</option>
-                                </select>
+                                <div className="font-grid desktop-font-grid">
+                                    {['Inter', "'Playfair Display'", 'Montserrat', "'Courier Prime'", "'Outfit'", "'Nunito'"].map(font => (
+                                        <button
+                                            key={font}
+                                            className={`font-chip desktop-font-chip ${fontFamily === font ? 'active' : ''}`}
+                                            onClick={() => onFontChange(font)}
+                                            style={{ fontFamily: font }}
+                                            title={font.replace(/'/g, '')}
+                                        >
+                                            {font.replace(/'/g, '').split(' ')[0]}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
