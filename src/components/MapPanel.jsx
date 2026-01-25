@@ -33,6 +33,7 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
                 zoom: zoom,
                 zoomControl: false, // Handle zoom control manually for custom positioning
                 doubleClickZoom: true, // Explicitly enable double-click zoom
+                tap: true, // Enable tap support for mobile devices
                 attributionControl: false, // Disable default attribution to avoid duplicates
             })
 
@@ -93,6 +94,20 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
 
             map.on('moveend', handleMapUpdate)
             map.on('zoomend', handleMapUpdate)
+
+            // Manual double-tap detection for mobile (more reliable than default doubleClickZoom)
+            let lastTapTime = 0
+            map.on('touchstart', (e) => {
+                if (e.originalEvent.touches.length > 1) return // Ignore multi-touch (pinch)
+
+                const now = Date.now()
+                const delta = now - lastTapTime
+                if (delta > 0 && delta < 300) {
+                    // Double tap detected
+                    map.zoomIn()
+                }
+                lastTapTime = now
+            })
 
             // Monitor container size changes to refresh map
             resizeObserverRef.current = new ResizeObserver((entries) => {

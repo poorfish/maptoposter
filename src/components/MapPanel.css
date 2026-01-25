@@ -32,6 +32,8 @@
     bottom: 0;
     width: 100%;
     height: 100%;
+    touch-action: none;
+    /* 关键：确保触摸事件全权交给 Leaflet 处理 */
 }
 
 .map-search-centered {
