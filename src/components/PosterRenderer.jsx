@@ -123,8 +123,12 @@ function PosterRenderer({ mapCenter, distance, city, country, theme, fontFamily,
                 </div>
             )}
 
-            <div className="poster-svg-container" style={{ aspectRatio: `${width}/${height}` }}>
-                <div className="poster-zoom-wrapper">
+            <div className="poster-svg-container">
+                <div
+                    className="poster-zoom-wrapper"
+                    style={{ aspectRatio: `${width}/${height}` }}
+                    data-orientation={orientation}
+                >
                     {/* Render reflection FIRST in DOM so it naturally stays behind without z-index hacks */}
                     {(() => {
                         // Determine if poster theme is light or dark for contrast optimization
