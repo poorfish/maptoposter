@@ -25,6 +25,8 @@
   --glass-bg: rgba(20, 20, 20, 0.7);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: rgba(0, 0, 0, 0.5);
+  --bg-control: rgba(15, 15, 15, 0.4);
+  --bg-control-active: rgba(255, 255, 255, 0.08);
   --active-bg: rgba(212, 175, 55, 0.1);
 
   /* Spacing */

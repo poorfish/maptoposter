@@ -150,22 +150,21 @@
 .leaflet-control-attribution {
     background: rgba(10, 10, 10, 0.7) !important;
     backdrop-filter: blur(10px);
-    color: var(--text-secondary) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-muted) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
     border-radius: 4px !important;
     padding: 4px 8px !important;
     font-size: 10px !important;
 }
 
 .leaflet-control-attribution a {
-    color: rgba(255, 255, 255, 0.6) !important;
+    color: var(--text-muted) !important;
     text-decoration: none;
     transition: opacity 0.2s ease;
 }
 
 .leaflet-control-attribution a:hover {
-    opacity: 1;
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: var(--text-secondary) !important;
 }
 
 .map-zoom-level {

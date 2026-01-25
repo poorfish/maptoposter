@@ -370,7 +370,7 @@
 }
 
 .footer-input {
-    background: var(--bg-tertiary);
+    background: var(--bg-control);
     border: 1px solid var(--border-color);
     padding: 0 0.7rem;
     height: 32px;
@@ -383,7 +383,7 @@
 
 .footer-input:focus {
     border-color: var(--accent-primary);
-    background: var(--bg-secondary);
+    background: rgba(15, 15, 15, 0.6);
 }
 
 
@@ -391,7 +391,7 @@
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background: var(--bg-tertiary);
+    background: var(--bg-control);
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3e%3cpath fill='%23999' d='M6 9L1 4h10z'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 0.8rem center;
@@ -418,7 +418,7 @@
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background: var(--bg-tertiary);
+    background: var(--bg-control);
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3e%3cpath fill='%23999' d='M6 9L1 4h10z'/%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-position: right 0.8rem center;
@@ -435,7 +435,7 @@
 
 .toggle-group {
     display: flex;
-    background: var(--bg-tertiary);
+    background: var(--bg-control);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     padding: 2px;
@@ -475,7 +475,7 @@
 }
 
 .toggle-btn.active {
-    background: var(--bg-secondary);
+    background: var(--bg-control-active);
     color: var(--accent-primary);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
@@ -879,7 +879,7 @@
     border-radius: var(--radius-sm);
     position: relative;
     border: 1px solid var(--border-color);
-    background: var(--bg-tertiary);
+    background: var(--bg-control);
     overflow: hidden;
     transition: all var(--transition-fast);
 }
@@ -921,7 +921,7 @@
 
 .font-chip {
     height: 44px;
-    background: var(--bg-tertiary);
+    background: var(--bg-control);
     border: 1px solid var(--border-color);
     border-radius: 12px;
     font-size: 0.85rem;
