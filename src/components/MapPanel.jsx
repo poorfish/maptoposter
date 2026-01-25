@@ -32,6 +32,7 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
                 center: center,
                 zoom: zoom,
                 zoomControl: false, // Handle zoom control manually for custom positioning
+                doubleClickZoom: true, // Explicitly enable double-click zoom
                 attributionControl: false, // Disable default attribution to avoid duplicates
             })
 
