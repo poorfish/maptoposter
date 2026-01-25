@@ -45,6 +45,11 @@
     cursor: pointer;
     z-index: 1;
     /* Establish base stacking context */
+
+    /* Safari 3D rendering fixes */
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    -webkit-font-smoothing: antialiased;
 }
 
 [data-theme='light'] .poster-zoom-wrapper {
@@ -82,6 +87,13 @@
     border-radius: var(--radius-lg);
     overflow: hidden;
     /* Ensure rounded corners clip the inside SVG */
+
+    /* iPhone Safari Rendering Fixes */
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: flat;
+    /* Keep interior flat while parent is 3D */
 
     /* Fade away naturally at distance */
     mask-image: linear-gradient(to bottom,
@@ -132,6 +144,10 @@
     display: block;
     object-fit: contain;
     /* Removed animation and transition from SVG to use wrapper instead */
+
+    /* Force GPU rendering in Safari to prevent invisible SVG */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
 }
 
 @keyframes poster-recompose {
