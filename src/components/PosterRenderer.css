@@ -106,16 +106,16 @@
 
 /* Light poster reflection on Light UI background (low contrast) */
 [data-theme='light'] .poster-reflection[data-poster-theme='light'] {
-    opacity: 0.85;
-    filter: blur(4px) brightness(0.98);
-    /* Slightly dim to distinguish from background */
+    opacity: 0.95;
+    filter: blur(4px) brightness(0.95);
+    /* Slightly more dim to distinguish */
 }
 
 /* Dark poster reflection on Dark UI background (low contrast) */
 [data-theme='dark'] .poster-reflection[data-poster-theme='dark'] {
-    opacity: 0.85;
-    filter: blur(4px) brightness(1.2);
-    /* Slightly brighten to distinguish from background */
+    opacity: 0.95;
+    filter: blur(4px) brightness(1.3);
+    /* Slightly more brighten to distinguish */
 }
 
 .poster-zoom-wrapper:hover .poster-reflection {
@@ -126,7 +126,7 @@
 /* Hover adjustments for clashing themes */
 [data-theme='light'] .poster-zoom-wrapper:hover .poster-reflection[data-poster-theme='light'],
 [data-theme='dark'] .poster-zoom-wrapper:hover .poster-reflection[data-poster-theme='dark'] {
-    opacity: 0.95;
+    opacity: 1;
 }
 
 /* Elegant Recomposition Entrance */
