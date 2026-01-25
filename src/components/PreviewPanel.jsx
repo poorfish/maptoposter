@@ -207,18 +207,6 @@ function PreviewPanel({
                                 <line x1="12" y1="15" x2="12" y2="3"></line>
                             </svg>
                         </button>
-                        {downloadMenuOpen && (
-                            <div className="download-menu glass">
-                                <button className="download-option" onClick={() => handleDownload('png')}>
-                                    <span>PNG Image</span>
-                                    <span className="format-label">High Res</span>
-                                </button>
-                                <button className="download-option" onClick={() => handleDownload('svg')}>
-                                    <span>SVG Vector</span>
-                                    <span className="format-label">Scalable</span>
-                                </button>
-                            </div>
-                        )}
                     </div>
                 </div>
 
@@ -268,16 +256,6 @@ function PreviewPanel({
                                 <line x1="12" y1="15" x2="12" y2="3"></line>
                             </svg>
                         </button>
-                        {downloadMenuOpen && (
-                            <div className="download-menu glass">
-                                <button className="download-option" onClick={() => handleDownload('png')}>
-                                    <span>PNG</span>
-                                </button>
-                                <button className="download-option" onClick={() => handleDownload('svg')}>
-                                    <span>SVG</span>
-                                </button>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>
@@ -608,6 +586,19 @@ function PreviewPanel({
                     </div>
                 )}
             </div>
+            {/* Portal-like placement to fix stacking context issues with backdrop-filter */}
+            {downloadMenuOpen && (
+                <div className="download-menu">
+                    <button className="download-option" onClick={() => handleDownload('png')}>
+                        <span>PNG Image</span>
+                        <span className="format-label">High Res</span>
+                    </button>
+                    <button className="download-option" onClick={() => handleDownload('svg')}>
+                        <span>SVG Vector</span>
+                        <span className="format-label">Scalable</span>
+                    </button>
+                </div>
+            )}
         </div>
     )
 }

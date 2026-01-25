@@ -4,6 +4,10 @@ import SplitPane from './components/SplitPane'
 import MapPanel from './components/MapPanel'
 import PreviewPanel from './components/PreviewPanel'
 
+import { getThemeNames } from './data/themes'
+
+const FONTS = ['Inter', "'Playfair Display'", 'Montserrat', "'Courier Prime'", "'Outfit'", "'Nunito'"]
+
 function App() {
     // Map state
     const [mapCenter, setMapCenter] = useState([51.505, -0.09]) // Default: London
@@ -15,8 +19,13 @@ function App() {
     const [country, setCountry] = useState('United Kingdom')
 
     // Theme state
-    const [currentTheme, setCurrentTheme] = useState('midnight_blue')
-    const [fontFamily, setFontFamily] = useState('Inter')
+    const [currentTheme, setCurrentTheme] = useState(() => {
+        const names = getThemeNames()
+        return names[Math.floor(Math.random() * names.length)]
+    })
+    const [fontFamily, setFontFamily] = useState(() => {
+        return FONTS[Math.floor(Math.random() * FONTS.length)]
+    })
 
     // Poster Layout state
     const [orientation, setOrientation] = useState('portrait')
