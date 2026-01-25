@@ -11,12 +11,10 @@
 }
 
 .poster-svg-container {
-    width: fit-content;
-    /* Only take space needed by the poster aspect-ratio */
-    height: auto;
+    width: 100%;
+    height: 100%;
     max-width: 100%;
     max-height: 100%;
-    /* Ensure it behaves correctly in Safari while maintaining aspect-ratio */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,9 +35,10 @@
 }
 
 .poster-zoom-wrapper {
-    width: 100%;
-    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
