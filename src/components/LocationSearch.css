@@ -45,8 +45,8 @@
 .search-input {
     flex: 1;
     background: transparent;
-    color: #ffffff;
-    /* pure white for contrast */
+    color: var(--text-primary);
+    /* subtle white for contrast */
     font-size: 1rem;
     padding: var(--spacing-xs) 0;
 }

@@ -16,9 +16,9 @@
   --accent-secondary: #ef4444;
   /* Red */
   --accent-muted: #c5a059;
-  --text-primary: #ffffff;
-  --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
+  --text-primary: rgba(255, 255, 255, 0.9);
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --text-muted: rgba(255, 255, 255, 0.35);
   --border-color: #27272a;
 
   /* Glassmorphism & UI Elements */
