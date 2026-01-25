@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import './App.css'
 import SplitPane from './components/SplitPane'
 import MapPanel from './components/MapPanel'
@@ -40,6 +40,36 @@ function App() {
     const [updatePreviewHandler, setUpdatePreviewHandler] = useState(null)
     const [hasGenerated, setHasGenerated] = useState(false)
     const [mobileView, setMobileView] = useState('map') // 'map' or 'preview'
+
+    // UI Theme state (light, dark, system)
+    const [uiTheme, setUiTheme] = useState(() => {
+        return localStorage.getItem('mapster-ui-theme') || 'system';
+    });
+
+    // Apply theme to document
+    useEffect(() => {
+        const root = window.document.documentElement;
+
+        const applyTheme = (theme) => {
+            if (theme === 'system') {
+                const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                root.setAttribute('data-theme', systemTheme);
+            } else {
+                root.setAttribute('data-theme', theme);
+            }
+            localStorage.setItem('mapster-ui-theme', theme);
+        };
+
+        applyTheme(uiTheme);
+
+        // Listen for system theme changes if set to system
+        if (uiTheme === 'system') {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            const handleChange = () => applyTheme('system');
+            mediaQuery.addEventListener('change', handleChange);
+            return () => mediaQuery.removeEventListener('change', handleChange);
+        }
+    }, [uiTheme]);
 
     const handleSyncStatusChange = useCallback((outOfSync, handler, hasGenerated) => {
         setIsOutOfSync(outOfSync)
@@ -97,6 +127,8 @@ function App() {
                     <MapPanel
                         center={mapCenter}
                         zoom={mapZoom}
+                        uiTheme={uiTheme}
+                        onUiThemeChange={setUiTheme}
                         isOutOfSync={isOutOfSync}
                         hasGenerated={hasGenerated}
                         onMapChange={handleMapChange}
@@ -109,12 +141,14 @@ function App() {
                         city={city}
                         country={country}
                         theme={currentTheme}
+                        uiTheme={uiTheme}
                         fontFamily={fontFamily}
                         orientation={orientation}
                         aspectRatio={aspectRatio}
                         mapData={mapData}
                         isLoading={isLoading}
                         onThemeChange={handleThemeChange}
+                        onUiThemeChange={setUiTheme}
                         onFontChange={handleFontChange}
                         onCityChange={handleCityChange}
                         onCountryChange={handleCountryChange}

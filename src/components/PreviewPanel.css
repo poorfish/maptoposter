@@ -14,7 +14,7 @@
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    background: rgba(10, 10, 10, 0.6);
+    background: var(--header-bg);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
     z-index: 10;
@@ -192,12 +192,12 @@
     left: var(--spacing-xl);
     /* 桌面端默认左侧 */
     width: 200px;
-    background: rgba(15, 15, 15, 0.45) !important;
+    background: var(--glass-bg) !important;
     backdrop-filter: blur(20px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid var(--glass-border) !important;
     border-radius: var(--radius-md);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 12px 40px var(--glass-shadow);
     overflow: hidden;
     z-index: 10000;
     transform: translateZ(0);
@@ -236,7 +236,7 @@
     flex-direction: column;
     overflow: hidden;
     position: relative;
-    background: #080808;
+    background: var(--bg-app);
     min-height: 0;
 
     /* container query support for responsive layout */
@@ -284,12 +284,12 @@
     padding: 0.8rem 1.2rem;
     padding-bottom: calc(0.8rem + 10px);
 
-    background: rgba(20, 20, 20, 0.4) !important;
+    background: var(--footer-bg) !important;
     backdrop-filter: blur(28px) saturate(180%);
     -webkit-backdrop-filter: blur(28px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 20px 60px var(--glass-shadow);
 
     overflow: visible;
 }
@@ -383,7 +383,25 @@
 
 .footer-input:focus {
     border-color: var(--accent-primary);
-    background: rgba(15, 15, 15, 0.6);
+    background: var(--bg-control-active);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+[data-theme='light'] .footer-input:focus {
+    background: #ffffff;
+}
+
+.ratio-select:focus,
+.font-select:focus {
+    border-color: var(--accent-primary);
+    background-color: var(--bg-control-active);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+}
+
+[data-theme='light'] .ratio-select:focus,
+[data-theme='light'] .font-select:focus {
+    background-color: #ffffff;
 }
 
 
@@ -477,7 +495,11 @@
 .toggle-btn.active {
     background: var(--bg-control-active);
     color: var(--accent-primary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 8px var(--glass-shadow);
+}
+
+[data-theme='light'] .toggle-btn.active {
+    box-shadow: none;
 }
 
 .toggle-btn.active svg {
@@ -518,6 +540,12 @@
     overflow: hidden;
     position: relative;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme='light'] .theme-dot {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
 .theme-map-svg {
@@ -529,14 +557,28 @@
     transition: filter var(--transition-fast);
 }
 
+[data-theme='light'] .theme-map-svg {
+    filter: brightness(1.08) contrast(1.02);
+    /* 提亮以适配浅色 UI，不再压暗 */
+}
+
 .theme-dot:hover .theme-map-svg,
 .theme-dot.active .theme-map-svg {
-    filter: brightness(0.85) contrast(1);
+    filter: brightness(0.9) contrast(1);
+}
+
+[data-theme='light'] .theme-dot:hover .theme-map-svg,
+[data-theme='light'] .theme-dot.active .theme-map-svg {
+    filter: brightness(1.15) contrast(1.05);
 }
 
 .theme-dot:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='light'] .theme-dot:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .theme-dot.active {
@@ -544,6 +586,68 @@
     transform: scale(1.1);
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
     z-index: 2;
+}
+
+[data-theme='light'] .theme-dot.active {
+    border: 1.5px solid #c9a227;
+    /* 稍微加粗外部金色边框 */
+    box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3);
+    position: relative;
+    transform: scale(1.1);
+}
+
+[data-theme='light'] .theme-dot.active::after {
+    content: '';
+    position: absolute;
+    inset: 0.5px;
+    /* 紧贴内侧 */
+    border: 1px solid #ffffff;
+    /* 1px 纯白内层 */
+    border-radius: 3px;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Theme Switcher Styles */
+.theme-switcher-group {
+    display: flex;
+    background: var(--bg-control);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    padding: 2px;
+    margin-right: var(--spacing-sm);
+}
+
+.theme-switcher-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-full);
+    color: var(--text-muted);
+    background: transparent;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.theme-switcher-btn:hover {
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.theme-switcher-btn.active {
+    background: var(--bg-control-active);
+    color: var(--accent-primary);
+    box-shadow: 0 2px 8px var(--glass-shadow);
+}
+
+[data-theme='light'] .theme-switcher-btn.active {
+    box-shadow: none;
+}
+
+.theme-switcher-btn svg {
+    stroke-width: 2.2px;
 }
 
 .styled-range-footer {
@@ -692,8 +796,11 @@
         /* 手机端移至右侧按钮下方 */
         top: 60px !important;
         width: 180px;
-        background: rgba(15, 15, 15, 0.6) !important;
-        /* 手机端背景稍深以增强对比度 */
+        background: var(--glass-bg) !important;
+        /* 使用主题变量 */
+        backdrop-filter: blur(20px) saturate(180%) !important;
+        border: 1px solid var(--glass-border) !important;
+        box-shadow: 0 12px 40px var(--glass-shadow);
     }
 
     .download-menu .download-option {
@@ -707,11 +814,11 @@
         left: var(--spacing-md);
         right: var(--spacing-md);
         height: 72px;
-        background: rgba(10, 10, 10, 0.45) !important;
+        background: var(--footer-bg) !important;
         backdrop-filter: blur(28px) saturate(180%);
         -webkit-backdrop-filter: blur(28px) saturate(180%);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        border: 1px solid var(--border-color);
+        box-shadow: 0 10px 40px var(--glass-shadow);
         z-index: 3200;
         display: flex !important;
         align-items: center;
@@ -719,6 +826,11 @@
         padding: 0;
         margin: 0;
         border-radius: var(--radius-xl);
+    }
+
+    [data-theme='light'] .preview-footer-settings {
+        box-shadow: none;
+        border-color: rgba(0, 0, 0, 0.1);
     }
 
     .bottom-sheet {
@@ -786,9 +898,14 @@
     max-height: 80vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 -10px 40px var(--glass-shadow);
     opacity: 0;
     visibility: hidden;
+}
+
+[data-theme='light'] .bottom-sheet {
+    box-shadow: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .bottom-sheet.active {
@@ -899,13 +1016,40 @@
     transition: filter var(--transition-fast);
 }
 
+[data-theme='light'] .theme-map-svg-mobile {
+    filter: brightness(1.05);
+    /* 浅色模式下提亮图例 */
+}
+
 .mobile-theme-card.active .theme-map-svg-mobile {
-    filter: brightness(0.85) contrast(1);
+    filter: brightness(0.9);
+}
+
+[data-theme='light'] .mobile-theme-card.active .theme-map-svg-mobile {
+    filter: brightness(1.1);
 }
 
 .mobile-theme-card.active .theme-preview {
     border-color: var(--accent-primary);
-    box-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+    border-width: 2px;
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.4);
+}
+
+[data-theme='light'] .mobile-theme-card.active .theme-preview {
+    border: 1.5px solid #c9a227;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(212, 175, 55, 0.25);
+}
+
+[data-theme='light'] .mobile-theme-card.active .theme-preview::after {
+    content: '';
+    position: absolute;
+    inset: 0.5px;
+    border: 1px solid #ffffff;
+    border-radius: 7px;
+    /* 适配移动端圆角 */
+    pointer-events: none;
+    z-index: 5;
 }
 
 .mobile-theme-card span {
@@ -983,10 +1127,15 @@
 }
 
 .desktop-font-chip.active {
-    background: var(--bg-tertiary);
+    background: var(--bg-control-active);
     color: var(--accent-primary);
     border-color: var(--accent-primary);
-    box-shadow: none;
+    box-shadow: 0 2px 8px var(--glass-shadow);
+}
+
+[data-theme='light'] .desktop-font-chip.active {
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .desktop-font-grid {

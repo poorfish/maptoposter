@@ -12,12 +12,21 @@ L.Icon.Default.mergeOptions({
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 })
 
-function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLocationSelect, onUpdatePreview }) {
+function MapPanel({ center, zoom, uiTheme, onUiThemeChange, isOutOfSync, hasGenerated, onMapChange, onLocationSelect, onUpdatePreview }) {
     const mapRef = useRef(null)
     const mapInstanceRef = useRef(null)
     const markerRef = useRef(null)
     const resizeObserverRef = useRef(null)
     const [currentZoom, setCurrentZoom] = useState(Math.round(zoom))
+
+    const handleThemeCycle = () => {
+        const themes = ['light', 'dark', 'system'];
+        const currentIndex = themes.indexOf(uiTheme);
+        const nextIndex = (currentIndex + 1) % themes.length;
+        if (onUiThemeChange) {
+            onUiThemeChange(themes[nextIndex]);
+        }
+    };
 
     // Store callbacks in ref to avoid re-initializing map listeners when handlers change
     const callbacksRef = useRef({ onMapChange, onLocationSelect })
@@ -45,10 +54,9 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
                 position: 'bottomleft'
             }).addTo(map)
 
-            // Add tile layer - CartoDB Dark Matter (Dark Gray)
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                maxZoom: 19,
-            }).addTo(map)
+            // Tile Layer Ref to allow swapping
+            const tileLayerRef = L.tileLayer('', { maxZoom: 19 }).addTo(map);
+            map.tileLayer = tileLayerRef;
 
             // Add single custom attribution control with dark theme
             L.control.attribution({
@@ -61,9 +69,7 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
                 className: 'custom-gold-marker',
                 html: `
                     <svg width="20" height="28" viewBox="0 0 20 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 0C4.477 0 0 4.477 0 10C0 15.523 10 28 10 28C10 28 20 15.523 20 10C20 4.477 15.523 0 10 0Z" fill="#D4AF37"/>
-                        <path d="M10 0C4.477 0 0 4.477 0 10C0 15.523 10 28 10 28C10 28 20 15.523 20 10C20 4.477 15.523 0 10 0Z" fill="url(#gold-gradient)"/>
-                        <circle cx="10" cy="10" r="3.5" fill="none" stroke="#1a1a1a" stroke-width="1.5"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 0C4.477 0 0 4.477 0 10C0 15.523 10 28 10 28C10 28 20 15.523 20 10C20 4.477 15.523 0 10 0ZM10 6.5C11.933 6.5 13.5 8.067 13.5 10C13.5 11.933 11.933 13.5 10 13.5C8.067 13.5 6.5 11.933 6.5 10C6.5 8.067 8.067 6.5 10 6.5Z" fill="url(#gold-gradient)"/>
                         <defs>
                             <linearGradient id="gold-gradient" x1="10" y1="0" x2="10" y2="20" gradientUnits="userSpaceOnUse">
                                 <stop offset="0%" stop-color="#F4D03F"/>
@@ -154,7 +160,32 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
         }
     }, []) // Init only once
 
+    // Handle Theme Change for Map Tiles
+    useEffect(() => {
+        if (!mapInstanceRef.current || !mapInstanceRef.current.tileLayer) return;
 
+        const updateTiles = () => {
+            let activeTheme = uiTheme;
+            if (uiTheme === 'system') {
+                activeTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+
+            const url = activeTheme === 'dark'
+                ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+
+            mapInstanceRef.current.tileLayer.setUrl(url);
+        };
+
+        updateTiles();
+
+        // If system, also listen to system changes to update tiles immediately
+        if (uiTheme === 'system') {
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            mediaQuery.addEventListener('change', updateTiles);
+            return () => mediaQuery.removeEventListener('change', updateTiles);
+        }
+    }, [uiTheme]);
 
     // Update map view when center/zoom props change externally
     useEffect(() => {
@@ -191,7 +222,13 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
         <div className="map-panel">
             {/* Mobile-only header */}
             <div className="mobile-header">
-                <div className="header-left"></div>
+                <div className="header-left">
+                    <a href="https://github.com/poorfish/mapster" target="_blank" rel="noopener noreferrer" className="github-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                        </svg>
+                    </a>
+                </div>
                 <div className="header-center">
                     <div className="preview-title-container">
                         <svg className="mapster-icon" width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -209,9 +246,33 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
                     </div>
                 </div>
                 <div className="header-right">
-                    <a href="https://github.com/poorfish/mapster" target="_blank" rel="noopener noreferrer" className="github-link">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>
-                    </a>
+                    <button className="icon-button" onClick={handleThemeCycle} title={`Theme: ${uiTheme}`}>
+                        {uiTheme === 'light' && (
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                        )}
+                        {uiTheme === 'dark' && (
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                        )}
+                        {uiTheme === 'system' && (
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        )}
+                    </button>
                 </div>
             </div>
 
@@ -248,4 +309,3 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
 }
 
 export default MapPanel
-

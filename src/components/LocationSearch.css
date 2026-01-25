@@ -10,25 +10,23 @@
     align-items: center;
     gap: var(--spacing-sm);
     padding: 10px 16px;
-    background: var(--bg-control);
-    /* Removed !important to allow hover/focus override */
+    background: var(--glass-bg);
     backdrop-filter: blur(15px);
     border-radius: var(--radius-lg);
     transition: all var(--transition-normal);
-    border: 1px solid rgba(212, 175, 55, 0.4);
-    /* Removed !important */
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 40px var(--glass-shadow);
 }
 
 .search-input-wrapper:hover {
-    background: rgba(30, 30, 30, 0.9);
-    border-color: rgba(212, 175, 55, 0.7);
+    background: var(--bg-control-active);
+    border-color: var(--text-muted);
 }
 
 .search-input-wrapper:focus-within {
-    background: rgba(15, 15, 15, 0.95);
+    background: var(--bg-control-active);
     border-color: var(--accent-primary);
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3) !important;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
 }
 
 .search-input-wrapper:focus-within .search-icon {
@@ -72,21 +70,21 @@
 
 .search-results {
     margin-top: 8px;
-    background: rgba(15, 15, 15, 0.7) !important;
+    background: var(--glass-bg);
     backdrop-filter: blur(15px);
-    border: 1px solid rgba(212, 175, 55, 0.4) !important;
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     overflow: hidden;
     max-height: 300px;
     overflow-y: auto;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 15px 50px var(--glass-shadow);
 }
 
 .search-result-item {
     padding: var(--spacing-md);
     cursor: pointer;
     transition: background var(--transition-fast);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .search-result-item:last-child {
@@ -94,7 +92,7 @@
 }
 
 .search-result-item:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-control);
 }
 
 .result-name {

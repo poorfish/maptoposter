@@ -66,12 +66,14 @@ function PreviewPanel({
     city,
     country,
     theme,
+    uiTheme,
     fontFamily,
     mapData,
     isLoading,
     orientation,
     aspectRatio,
     onThemeChange,
+    onUiThemeChange,
     onFontChange,
     onCityChange,
     onCountryChange,
@@ -131,6 +133,15 @@ function PreviewPanel({
         setRefreshKey(prev => prev + 1)
         setRenderedParams({ center: mapCenter, distance: distance })
     }
+
+    const handleThemeCycle = () => {
+        const themes = ['light', 'dark', 'system'];
+        const currentIndex = themes.indexOf(uiTheme);
+        const nextIndex = (currentIndex + 1) % themes.length;
+        if (onUiThemeChange) {
+            onUiThemeChange(themes[nextIndex]);
+        }
+    };
 
     // Notify parent about sync status changes
     useEffect(() => {
@@ -232,11 +243,79 @@ function PreviewPanel({
 
                 {/* Right: GitHub Link + Download (Mobile) */}
                 <div className="header-right">
+                    <button className="icon-button mobile-only-inline" onClick={handleThemeCycle} title={`Theme: ${uiTheme}`}>
+                        {uiTheme === 'light' && (
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                        )}
+                        {uiTheme === 'dark' && (
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                        )}
+                        {uiTheme === 'system' && (
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        )}
+                    </button>
+
+                    <div className="theme-switcher-group desktop-only">
+                        <button
+                            className={`theme-switcher-btn ${uiTheme === 'light' ? 'active' : ''}`}
+                            onClick={() => onUiThemeChange('light')}
+                            title="Light Mode"
+                        >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                        </button>
+                        <button
+                            className={`theme-switcher-btn ${uiTheme === 'dark' ? 'active' : ''}`}
+                            onClick={() => onUiThemeChange('dark')}
+                            title="Dark Mode"
+                        >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                        </button>
+                        <button
+                            className={`theme-switcher-btn ${uiTheme === 'system' ? 'active' : ''}`}
+                            onClick={() => onUiThemeChange('system')}
+                            title="System Mode"
+                        >
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </button>
+                    </div>
+
                     <a
                         href="https://github.com/poorfish/mapster"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="github-link"
+                        className="github-link desktop-only"
                         title="View on GitHub"
                     >
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

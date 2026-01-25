@@ -16,7 +16,7 @@
     max-height: 100%;
     margin: 0 auto;
     border-radius: var(--radius-lg);
-    box-shadow: 0 40px 120px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 40px 120px var(--glass-shadow);
     background: transparent !important;
 
     /* Professional Shutter transition */
@@ -60,6 +60,10 @@
     transform: scale(1.02);
 }
 
+[data-theme='light'] .poster-svg-container {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+}
+
 .poster-svg {
     max-width: 100%;
     max-height: 100%;
@@ -75,7 +79,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--glass-bg);
     backdrop-filter: blur(2px);
     display: flex;
     flex-direction: column;
@@ -183,11 +187,11 @@
     pointer-events: auto;
     /* Enable interaction for retry link */
     letter-spacing: 0.3px;
-    background: rgba(10, 10, 10, 0.75);
+    background: var(--header-bg);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-color);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 32px var(--glass-shadow);
     white-space: nowrap;
     transition: all var(--transition-normal);
 }
