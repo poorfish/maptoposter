@@ -6,6 +6,19 @@
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  /* Prevent scroll chaining on iOS */
+  position: fixed;
+  /* Lock viewport to prevent shift */
+}
+
 :root {
   /* Common Accent Colors (mostly stable across themes) */
   --accent-primary: #d4af37;

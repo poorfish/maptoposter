@@ -18,6 +18,24 @@ function App() {
     const [city, setCity] = useState('London')
     const [country, setCountry] = useState('United Kingdom')
 
+    // Fix for iOS Safari soft keyboard layout shift bug
+    // When keyboard dismisses, sometimes the viewport doesn't scroll back to top
+    useEffect(() => {
+        const handleFocusOut = (e) => {
+            const { tagName } = e.target;
+            if (tagName === 'INPUT' || tagName === 'TEXTAREA') {
+                // Small delay to allow keyboard animation to start
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    document.body.scrollTop = 0;
+                }, 100);
+            }
+        };
+
+        window.addEventListener('focusout', handleFocusOut);
+        return () => window.removeEventListener('focusout', handleFocusOut);
+    }, []);
+
     // Theme state
     const [currentTheme, setCurrentTheme] = useState(() => {
         const names = getThemeNames()
