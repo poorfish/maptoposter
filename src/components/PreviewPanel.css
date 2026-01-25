@@ -447,7 +447,7 @@
     flex: 1;
     height: 100%;
     padding: 0;
-    border-radius: var(--radius-md);
+    border-radius: calc(var(--radius-md) - 2px);
     transition: all var(--transition-fast);
     color: var(--text-secondary);
 

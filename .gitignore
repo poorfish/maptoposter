@@ -21,3 +21,6 @@ npm-debug.log*
 .vscode/
 *.swp
 *.swo
+
+# AI Agent
+.agent/
