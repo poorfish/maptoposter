@@ -26,6 +26,8 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
     }, [onMapChange, onLocationSelect])
 
     useEffect(() => {
+        let cleanupDoubleTap = null;
+
         if (!mapInstanceRef.current) {
             // Initialize map
             const map = L.map(mapRef.current, {
@@ -33,7 +35,8 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
                 zoom: zoom,
                 zoomControl: false, // Handle zoom control manually for custom positioning
                 doubleClickZoom: true, // Explicitly enable double-click zoom
-                tap: true, // Enable tap support for mobile devices
+                tap: false, // Disable Leaflet's internal tap handler (often breaks things in modern mobile browsers)
+                touchZoom: true,
                 attributionControl: false, // Disable default attribution to avoid duplicates
             })
 
@@ -95,19 +98,30 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
             map.on('moveend', handleMapUpdate)
             map.on('zoomend', handleMapUpdate)
 
-            // Manual double-tap detection for mobile (more reliable than default doubleClickZoom)
+            // Robust manual double-tap detection using native DOM events
+            const mapContainer = mapRef.current
             let lastTapTime = 0
-            map.on('touchstart', (e) => {
-                if (e.originalEvent.touches.length > 1) return // Ignore multi-touch (pinch)
+
+            const handleTouchStart = (e) => {
+                if (e.touches.length > 1) return // Ignore multi-touch (pinch)
 
                 const now = Date.now()
                 const delta = now - lastTapTime
+
                 if (delta > 0 && delta < 300) {
-                    // Double tap detected
-                    map.zoomIn()
+                    // Prevent browser zoom, but allow us to handle it
+                    if (e.cancelable) e.preventDefault()
+
+                    // Zoom towards the tap location
+                    const touch = e.touches[0]
+                    const latlng = map.mouseEventToLatLng(touch)
+                    map.setView(latlng, map.getZoom() + 1)
                 }
                 lastTapTime = now
-            })
+            }
+
+            mapContainer.addEventListener('touchstart', handleTouchStart, { passive: false })
+            cleanupDoubleTap = () => mapContainer.removeEventListener('touchstart', handleTouchStart)
 
             // Monitor container size changes to refresh map
             resizeObserverRef.current = new ResizeObserver((entries) => {
@@ -125,14 +139,17 @@ function MapPanel({ center, zoom, isOutOfSync, hasGenerated, onMapChange, onLoca
         }
 
         return () => {
-            // Cleanup on unmount
-            if (resizeObserverRef.current) {
-                resizeObserverRef.current.disconnect()
-                resizeObserverRef.current = null
-            }
+            if (cleanupDoubleTap) cleanupDoubleTap()
+
+            // Enhanced cleanup
             if (mapInstanceRef.current) {
                 mapInstanceRef.current.remove()
                 mapInstanceRef.current = null
+            }
+
+            if (resizeObserverRef.current) {
+                resizeObserverRef.current.disconnect()
+                resizeObserverRef.current = null
             }
         }
     }, []) // Init only once
