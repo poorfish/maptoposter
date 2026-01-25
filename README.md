@@ -1,3 +1,7 @@
+![Banner](public/banner.jpg)
+
+English | [简体中文](README_CN.md)
+
 # Mapster
 
 A premium React web application designed to create beautiful, minimalist map posters for any location on Earth. Mapster combines powerful map data visualization with a sophisticated, glassmorphism-inspired UI to deliver a studio-quality design experience.

@@ -1,3 +1,7 @@
+![Banner](public/banner.jpg)
+
+[English](README.md) | 简体中文
+
 # Mapster
 
 一个高端的 React Web 应用程序，旨在为您在地球上的任何位置创建精美、极简的地图海报。Mapster 将强大的地图数据可视化与精致的“毛玻璃（Glassmorphism）”UI 相结合，提供工作室级的专业设计体验。
