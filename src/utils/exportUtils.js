@@ -16,13 +16,26 @@ function getSerializedSVG(svgElement, fontFamily = 'Inter') {
     clonedSvg.setAttribute('width', width);
     clonedSvg.setAttribute('height', height);
 
-    // Embed all fonts used in the app so they appear in PNG export
-    const style = document.createElement('style');
-    // Using a more comprehensive font import that matches the app's available fonts
+    // Create a defs element if it doesn't exist, or use the existing one
+    let defs = clonedSvg.querySelector('defs');
+    if (!defs) {
+        defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        clonedSvg.prepend(defs);
+    }
+
+    // Embed all fonts used in the app so they appear in PNG/SVG export
+    const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+    style.setAttribute('type', 'text/css');
+
+    // We force the chosen fontFamily on all text elements to ensure cross-viewer compatibility
     style.textContent = `
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Montserrat:wght@300;400;500;600;700&family=Courier+Prime:wght@400;700&family=Outfit:wght@300;400;500;600;700&family=Nunito:wght@200..900&display=swap');
+        
+        text, tspan {
+            font-family: ${fontFamily}, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+        }
     `;
-    clonedSvg.prepend(style);
+    defs.appendChild(style);
 
     // Add XML namespace if not present
     clonedSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
