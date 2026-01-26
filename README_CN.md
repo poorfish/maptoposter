@@ -20,7 +20,13 @@
 
 ## 应用截图
 
-![Mapster 应用程序](screenshots/app-screenshot.png)
+### 桌面端视图
+![Desktop Screenshot](screenshots/screenshot_desktop.png)
+
+### 移动端体验
+| 主题选择 | 海报定制 | 工作台视图 |
+|:---:|:---:|:---:|
+| ![Mobile 1](screenshots/screenshot_mobile_1.png) | ![Mobile 2](screenshots/screenshot_mobile_2.png) | ![Mobile 3](screenshots/screenshot_mobile_3.png) |
 
 ## 快速开始
 

@@ -20,7 +20,13 @@ A premium React web application designed to create beautiful, minimalist map pos
 
 ## Screenshots
 
-![Mapster Application](screenshots/app-screenshot.png)
+### Desktop View
+![Desktop Screenshot](screenshots/screenshot_desktop.png)
+
+### Mobile Experience
+| Theme Gallery | Poster Customization | Studio View |
+|:---:|:---:|:---:|
+| ![Mobile 1](screenshots/screenshot_mobile_1.png) | ![Mobile 2](screenshots/screenshot_mobile_2.png) | ![Mobile 3](screenshots/screenshot_mobile_3.png) |
 
 ## Quick Start
 
