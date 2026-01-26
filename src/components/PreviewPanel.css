@@ -191,8 +191,8 @@
     position: absolute;
     top: 68px;
     /* 下移至 Header 下方 */
-    left: var(--spacing-xl);
-    /* 桌面端默认左侧 */
+    right: var(--spacing-xl);
+    /* Align with the button on the right */
     width: 200px;
     background: var(--glass-bg) !important;
     backdrop-filter: blur(20px) saturate(180%) !important;
