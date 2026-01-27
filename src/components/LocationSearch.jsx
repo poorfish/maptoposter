@@ -11,7 +11,7 @@ function LocationSearch({ onLocationSelect }) {
     const containerRef = useRef(null)
 
     useEffect(() => {
-        if (query.length < 3) {
+        if (query.length < 2) {
             setResults([])
             setShowResults(false)
             return
@@ -31,6 +31,7 @@ function LocationSearch({ onLocationSelect }) {
                         format: 'json',
                         limit: 5,
                         addressdetails: 1,
+                        namedetails: 1,
                         'accept-language': 'en'
                     }
                 })
@@ -65,11 +66,16 @@ function LocationSearch({ onLocationSelect }) {
     }, [])
 
     const handleSelect = (result) => {
+        // Result is already localized to English via accept-language
         const city = result.address?.city ||
             result.address?.town ||
             result.address?.village ||
+            result.namedetails?.['name:en'] ||
             result.name
-        const country = result.address?.country || ''
+
+        const country = result.address?.country ||
+            result.namedetails?.['country:en'] ||
+            ''
 
         onLocationSelect({
             city,
