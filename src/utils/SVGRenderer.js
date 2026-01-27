@@ -148,11 +148,10 @@ export function renderRails(rails, theme, bounds, width, height) {
             key: `rail-${index}`,
             d: pathData,
             stroke: theme.rail,
-            strokeWidth: 0.45, // Reduced for a smoother, non-bold look
+            strokeWidth: 0.4,
             fill: 'none',
             strokeLinecap: 'butt',
-            strokeLinejoin: 'round',
-            strokeDasharray: '4,3'
+            strokeLinejoin: 'round'
         };
     }).filter(Boolean);
 }
