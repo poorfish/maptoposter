@@ -103,10 +103,130 @@ async function initResvg() {
  * Export SVG element as a high-resolution PNG using Resvg (WASM)
  * This guarantees accurate font rendering by bypassing the browser's limited Canvas API.
  */
+/**
+ * Check if text contains complex scripts (CJK, Thai, Arabic, etc.) that might not be supported by the bundled fonts.
+ * Basic range check for non-Latin characters.
+ */
+function hasComplexScripts(text) {
+    // Regex for:
+    // Chinese (Han), Japanese (Hiragana/Katakana), Korean (Hangul)
+    // Thai, Arabic, Hebrew, Devanagari, etc.
+    // NOTE: We must use the 'u' flag for strict unicode handling code points > FFFF
+
+    // Ranges cover:
+    // ARABIC & Extended: \u0600-\u06FF, \u0750-\u077F
+    // SOUTH ASIAN (Devanagari, Bengali, Tamil, etc) -> MYANMAR, ETC: \u0900-\u109F
+    // THAI: \u0E00-\u0E7F
+    // HANGUL (Korean): \u1100-\u11FF, \uAC00-\uD7AF, etc.
+    // HIRAGANA/KATAKANA (Japanese): \u3040-\u30FF
+    // CJK (Chinese/Japanese/Korean): \u2E80-\u9FFF
+    // High Surrogates (Emoji/Ext-B etc): \uD800-\uDBFF
+    // Extended definitions from before
+
+    // Simplified logic: Check for blocks known to need fallback
+    // \u0600-\u06FF : Arabic
+    // \u0750-\u077F : Arabic Supp
+    // \u08A0-\u08FF : Arabic Extended-A
+    // \u0900-\u0DFF : Devanagari, Bengali, Gurmukhi, Gujarati, Oriya, Tamil, Telugu, Kannada, Malayalam, Sinhala
+    // \u0E00-\u0E7F : Thai
+    // \u3000-\uFAFF : CJH Symbols, Kana, Hangul, CJK Ideographs (Broad sweep for East Asian)
+    // \u{20000}-\u{2A6DF} : CJK Ext B
+
+    const complexRegex = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\u0900-\u0DFF\u0E00-\u0E7F\u1100-\u11FF\u3000-\uFAFF\u{20000}-\u{2A6DF}]/u;
+    return complexRegex.test(text);
+}
+
+/**
+ * Fallback export method using HTML5 Canvas
+ * Uses the browser's native rendering engine which has access to all system fonts.
+ */
+function exportViaCanvas(svgElement, filename, scale = 3) {
+    console.log('Falling back to Canvas export...');
+
+    return new Promise((resolve, reject) => {
+        try {
+            const svgString = getSerializedSVG(svgElement);
+            const img = new Image();
+
+            // Create a Blob URL from the SVG string
+            const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                // Use the viewBox width/height for accurate aspect ratio
+                const viewBox = svgElement.getAttribute('viewBox')?.split(' ') || [0, 0, 600, 800];
+                const baseWidth = parseFloat(viewBox[2]);
+                const baseHeight = parseFloat(viewBox[3]);
+
+                canvas.width = baseWidth * scale;
+                canvas.height = baseHeight * scale;
+
+                const ctx = canvas.getContext('2d');
+                ctx.scale(scale, scale);
+
+                // Draw the image
+                ctx.drawImage(img, 0, 0, baseWidth, baseHeight);
+
+                canvas.toBlob((blob) => {
+                    if (!blob) {
+                        reject(new Error('Canvas toBlob failed'));
+                        return;
+                    }
+
+                    const downloadUrl = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    link.download = `${filename}.png`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(downloadUrl);
+                    URL.revokeObjectURL(url); // Revoke the SVG blob URL
+
+                    console.log(`PNG exported successfully (Canvas Fallback): ${filename}.png`);
+                    resolve();
+                }, 'image/png');
+            };
+
+            img.onerror = (e) => {
+                URL.revokeObjectURL(url);
+                reject(new Error('Failed to load SVG into Image'));
+            };
+
+            img.src = url;
+
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+/**
+ * Export SVG element as a high-resolution PNG using Resvg (WASM)
+ * This guarantees accurate font rendering by bypassing the browser's limited Canvas API.
+ */
 export async function exportPNG(svgElement, filename, fontFamily, scale = 3) {
     if (!svgElement) {
         console.error('No SVG element provided for export');
         return;
+    }
+
+    // 0. Pre-check: Inspect text content for complex scripts
+    // If the poster contains characters our bundled fonts don't support (like Chinese),
+    // we should skip WASM and go straight to Canvas to avoid "tofu" boxes.
+    const textContent = svgElement.textContent || '';
+    if (hasComplexScripts(textContent)) {
+        console.warn('Detected complex scripts (e.g., CJK), skipping WASM and using Canvas fallback.');
+        try {
+            await exportViaCanvas(svgElement, filename, scale);
+            return;
+        } catch (canvasError) {
+            console.error('Canvas fallback failed:', canvasError);
+            // If canvas fails, we might as well let it fall through or alert the user, 
+            // but for now let's stop here as WASM definitely won't work either.
+            throw canvasError;
+        }
     }
 
     try {
@@ -174,8 +294,14 @@ export async function exportPNG(svgElement, filename, fontFamily, scale = 3) {
         console.log(`PNG exported successfully (High-Fidelity): ${filename}.png`);
 
     } catch (error) {
-        console.error('Failed to export PNG with Resvg:', error);
-        throw error;
+        console.error('Failed to export PNG with Resvg, attempting fallback:', error);
+        // Fallback to Canvas implementation if WASM fails for any reason
+        try {
+            await exportViaCanvas(svgElement, filename, scale);
+        } catch (fallbackError) {
+            console.error('Double failure: Both WASM and Canvas export failed', fallbackError);
+            throw error; // Throw the original error
+        }
     }
 }
 
@@ -183,7 +309,15 @@ export async function exportPNG(svgElement, filename, fontFamily, scale = 3) {
  * Generate filename from city, theme, and font
  */
 export function generateFilename(city, theme, fontFamily = '') {
-    const citySlug = city.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+    // Replace spaces with underscores
+    // Remove only characters that are typically unsafe/illegal in filenames across OSs:
+    // / \ : * ? " < > |
+    // checking for control characters as well \u0000-\u001F
+    const citySlug = city.trim()
+        .replace(/\s+/g, '_')
+        .replace(/[\\/:*?"<>|]/g, '')
+        .replace(/[\u0000-\u001f]/g, '');
+
     const themeSlug = theme.toLowerCase().replace(/\s+/g, '_');
     const fontSlug = cleanFontName(fontFamily).toLowerCase().replace(/\s+/g, '_');
     const timestamp = new Date().getTime().toString().slice(-4); // Add small timestamp to break cache
